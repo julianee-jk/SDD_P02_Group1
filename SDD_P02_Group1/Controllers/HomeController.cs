@@ -84,6 +84,7 @@ namespace SDD_P02_Group1.Controllers
             {
                 password = password + Convert.ToString(characters[random.Next(characters.Length)]);
             }
+            Console.WriteLine(password);
 
             string email = formData["passwordResetEmail"].ToString();
             UserContext.ResetPassword(email, password);
