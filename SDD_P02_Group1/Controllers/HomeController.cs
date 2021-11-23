@@ -77,9 +77,16 @@ namespace SDD_P02_Group1.Controllers
         {
             // still need put the automatic new password here
             //--------------------------------------------------
+            Random random = new Random();
+            string characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890!@#$%^&*()";
+            string password = "";
+            for (int a = 0; a < 15; a++)
+            {
+                password = password + Convert.ToString(characters[random.Next(characters.Length)]);
+            }
 
             string email = formData["passwordResetEmail"].ToString();
-            UserContext.ResetPassword(email, "lololol");
+            UserContext.ResetPassword(email, password);
 
             string messageBody = @"Dear user, \n" +
                                       "You are currently attempting a password reset. \n" + "\n" +
