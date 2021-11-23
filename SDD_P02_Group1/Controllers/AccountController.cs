@@ -21,7 +21,6 @@ namespace SDD_P02_Group1.Controllers
             {
                 int userid = HttpContext.Session.GetInt32("UserID").Value;
                 ViewData["userID"] = UserContext.GetDetails(userid).UserId;
-                ViewData["userName"] = UserContext.GetDetails(userid).Username;
                 ViewData["userEmail"] = UserContext.GetDetails(userid).EmailAddr;
             }
             return View();
