@@ -11,7 +11,9 @@ namespace SDD_P02_Group1.Models
         [Display(Name = "ID")]
         public int UserId { get; set; }
 
-        [Display(Name = "User Name")]
+        [Display(Name = "Username")]
+        [ValidateUserNameExists]
+        [Required(ErrorMessage = "Please enter a username!")]
         public string Username { get; set; }
 
         [Display(Name = "Password")]
