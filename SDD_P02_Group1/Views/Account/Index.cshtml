@@ -1,0 +1,19 @@
+﻿@model SDD_P02_Group1.Models.User
+
+@{
+    ViewData["Title"] = "Account";
+}
+
+<h2 style="margin-top: 2em;">Hello, <span style="color: #7f218a;">@ViewData["userName"]</span></h2>
+
+<div>
+    <hr />
+        <h5>Account ID: <span style="color: #84508f";>@ViewData["userID"]</span></h5>
+
+        <h5>Email Address: <span style="color: #84508f";>@ViewData["userEmail"]</span> </h5>
+
+    <div style="margin-top: 20rem">
+        <a asp-controller="Account" asp-action="#" style="color: #b429c4">Edit Account Info</a><br /> <!-- asp-action="Edit"-->
+        <a asp-controller="Home" asp-action="SignOut" style="color: #b429c4">Sign Out</a>
+    </div>
+</div>
