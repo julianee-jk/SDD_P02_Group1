@@ -1,45 +1,79 @@
 ﻿<!DOCTYPE html>
-<html lang="en">
+<html lang="en" translate="no">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - SDD_P02_Group1</title>
+    <meta name="google" content="notranslate">
+    <title>@ViewData["Title"] - Moolah</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" />
+    <link rel="icon" type="image/png" href="~/icon/moolah_icon.png">
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">SDD_P02_Group1</a>
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
-                    </ul>
+        @if (Context.Session.GetString("User") != null)
+            {
+                @await Html.PartialAsync("_UserMenu.cshtml")
+            }
+        else
+        {
+            <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-lg-3">
+                <div class="container">
+
+                    <a class="navbar-brand" href="~/Home/Index"
+                       style="color: orange; font-weight: bold; font-size: medium; word-break: break-word;">
+                        Moo<span style="color: #0E152D">lah</span>
+                    </a>
+
+                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                            aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+
+                    <div class="collapse navbar-collapse">
+                        <ul class="navbar-nav mr-auto">
+                            <!--<li class="nav-item">
+                                <a class="nav-link text-dark" asp-controller="Home" asp-action="FindUs">Find Us</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" href="~/PublicViewWorks/Index">View Works</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" href="~/PublicViewRankings/Index">View Rankings</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" href="~/PublicVote/Index">Vote for Competitors</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" href="~/Comments/Index">View Comments</a>
+                            </li>-->
+                        </ul>
+                        <ul class="navbar-nav ml-auto">
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="Home" asp-action="Login" style="color: orange">Login</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="Home" asp-action="Create" style="color: orange">Register</a>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
-            </div>
-        </nav>
+            </nav>
+        }
     </header>
+
     <div class="container">
         <main role="main" class="pb-3">
             @RenderBody()
         </main>
     </div>
 
-    <footer class="border-top footer text-muted">
+    <footer class="border-top footer text-center" style="color: white; background-color: #0E152D">
         <div class="container">
-            &copy; 2021 - SDD_P02_Group1 - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            Copyright &copy; 2021 by SDD_P01_T1
         </div>
     </footer>
+
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
