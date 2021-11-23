@@ -13,7 +13,7 @@
         <div class="collapse navbar-collapse">
             <ul class="navbar-nav mr-auto">
                 <li class="nav-item">
-                    <a class="nav-link text-dark" href="#">Manage Assets</a>
+                    <a class="nav-link text-dark" asp-controller="Asset" asp-action="Index" >Manage Assets</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link text-dark" href="#">Predict</a>
@@ -26,7 +26,7 @@
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item">
                     <!--<a class="nav-link" asp-controller="Home" asp-action="SignOut" style="color: #b429c4">Sign Out</a>-->
-                    <a class="nav-link" asp-controller="Account" asp-action="Index" style="color: #b429c4">@ViewData["UserName"]</a>
+                    <a class="nav-link" asp-controller="Account" asp-action="Index" style="color: #b429c4">@Context.Session.GetString("Username")</a>
                 </li>
             </ul>
         </div>
