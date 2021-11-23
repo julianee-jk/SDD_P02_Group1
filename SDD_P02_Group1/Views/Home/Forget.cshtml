@@ -1,5 +1,5 @@
 ﻿@{
-    ViewData["Title"] = "Login";
+    ViewData["Title"] = "Forget";
 }
 
 <h4 class="font-weight-bold text-center" style="margin:2em">Login</h4>
@@ -12,12 +12,9 @@
                     <input type="email" class="form-control" name="txtEmail" id="txtEmail" required />
                 </div>
 
-                <div class="form-group">
-                    <label for="txtPassword" class="control-label">Password</label>
-                    <input type="password" class="form-control" name="txtPassword" id="txtPassword" required />
-                </div>
+                
                 <div class="form-group text-center" style="margin-top: 2rem">
-                    <a asp-controller="Home" asp-action="Index" class="btn btn-secondary">Go Back</a>&nbsp;
+                    <a asp-controller="Home" asp-action="Forget" class="btn btn-secondary">Go Back</a>&nbsp;
                     <input type="submit" id="btnLogin" class="btn btn-primary" value="Login" style="width:100px" />
                 </div>
                 <div class="text-center">
@@ -27,8 +24,4 @@
         </form>
     </div>
 </div>
-
-<p class="text-center" style="margin: 1rem ">No Account? <a asp-controller="Home" asp-action="Create">Create One!</a></p>
-
-<p class="text-center" style="margin: 1rem ">Maybe you forgot your password.<a asp-controller="Home" asp-action="Forget">Reset it here.</a></p>
 
