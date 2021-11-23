@@ -29,14 +29,7 @@
 </div>
 
 
-<p class="text-center" style="margin: 1rem "><a data-toggle="modal" data-target="#resetPasswordConfirmation">Forgot Password?</a></p>
-
-
-
-@*<button id="hide" style="margin: 1rem" type="button" class="btn btn-danger" data-toggle="modal" data-target="#resetPasswordConfirmation">
-        Proceed to Joint Applicant
-    </button>
-*@
+<p class="text-center" style="margin: 1rem ">Forgot Password?<a href="#" data-toggle="modal" data-target="#resetPasswordConfirmation"> Click here</a></p>
 <p class="text-center" style="margin: 1rem ">No Account? <a asp-controller="Home" asp-action="Create">Create One!</a></p>
 
 <div class="modal fade" id="resetPasswordConfirmation" tabindex="-1" role="dialog" aria-labelledby="resetPasswordConfirmation" aria-hidden="true">
@@ -49,7 +42,7 @@
                 </button>
             </div>
             <div class="modal-body">
-                Please enter the email you used to singup. If the account exists, an email will be sent to it.
+                Please enter the email you used to sign up. If the account exists, an email will be sent to it.
                 <br><br>
                     <form method="post" action="~/Home/ResetPassword">
                         <input type="email" class="form-control" name="passwordResetEmail">

@@ -75,17 +75,22 @@ namespace SDD_P02_Group1.Controllers
         [HttpPost]
         public ActionResult ResetPassword(IFormCollection formData)
         {
-            // still need put the automatic new password here
-            //--------------------------------------------------
+            Random random = new Random();
+            string characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890!@#$%^&*()";
+            string password = "";
+            for (int a = 0; a < 15; a++)
+            {
+                password = password + Convert.ToString(characters[random.Next(characters.Length)]);
+            }
 
             string email = formData["passwordResetEmail"].ToString();
-            UserContext.ResetPassword(email, "lololol");
+            UserContext.ResetPassword(email, password);
 
             string messageBody = @"Dear user, \n" +
                                       "You are currently attempting a password reset. \n" + "\n" +
-                                      "Please click the link below to verify the authenticity of this action. \n" +
-                                      "https://localhost:44320/Home/Login" + "\n"
-                                  + "For the new password, it will be given to you only after verification";
+                                      "Your password has now been changed to the one below. \n" +
+                                      password + "\n"
+                                  + "Please use this password to log in. Note that you can change it later";
             SendEmail("Reset password", messageBody, email);
 
             return RedirectToAction("Index");
