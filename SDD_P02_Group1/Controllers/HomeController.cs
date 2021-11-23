@@ -71,27 +71,26 @@ namespace SDD_P02_Group1.Controllers
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
 
-/*        [HttpPost]
-        public ActionResult resetPassword(IFormCollection formData)
+        [HttpPost]
+        public ActionResult ResetPassword(IFormCollection formData)
         {
             // still need put the automatic new password here
             //--------------------------------------------------
 
-            string email = formData["txtEmail"].ToString();
-           *//*UserContext.ResetPassword(email, newpassword);*//*
+            string email = formData["passwordResetEmail"].ToString();
+            UserContext.ResetPassword(email, "lololol");
 
             string messageBody = @"Dear user, \n" +
                                       "You are currently attempting a password reset. \n" + "\n" +
                                       "Please click the link below to verify the authenticity of this action. \n" +
-                                      "https://localhost:44363/" + "\n"
+                                      "https://localhost:44320/Home/Login" + "\n"
                                   + "For the new password, it will be given to you only after verification";
+            SendEmail("Reset password", messageBody, email);
 
-            sendEmail("Reset password", messageBody, email);
+            return RedirectToAction("Index");
+        }
 
-            return RedirectToAction("");
-        } */
-
-        public static void sendEmail(string messageBody, string messageContent, string email)
+        public static void SendEmail(string messageBody, string messageContent, string email)
         {
             MailAddress from = new MailAddress("moolahnoreply@gmail.com");
             MailAddress to = new MailAddress(email);
