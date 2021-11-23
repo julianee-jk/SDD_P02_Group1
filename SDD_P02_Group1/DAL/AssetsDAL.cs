@@ -5,6 +5,7 @@ using System.Data.SqlClient;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using SDD_P02_Group1.Models;
 
 namespace SDD_P02_Group1.DAL
 {
@@ -27,36 +28,42 @@ namespace SDD_P02_Group1.DAL
             conn = new SqlConnection(strConn);
         }
 
-        /*        public int AddAsset(Asset asset)
-                {
-                    //Create a SqlCommand object from connection object
-                    SqlCommand cmd = conn.CreateCommand();
-                    //Specify an INSERT SQL statement which will
-                    //return the auto-generated StaffID after insertion
-                    cmd.CommandText = @"INSERT INTO Asset () VALUES ()";
+        public int AddAsset(Asset asset)
+        {
+            //Create a SqlCommand object from connection object
+            SqlCommand cmd = conn.CreateCommand();
+            //Specify an INSERT SQL statement which will
+            //return the auto-generated StaffID after insertion
+            cmd.CommandText = @"INSERT INTO UserAsset (AssetName, InitialValue, CurrentValue, PredictedValue) OUTPUT INSERTED.AssetID VALUES (@assetname, @initial, @current, @predicted)";
+            cmd.Parameters.AddWithValue("@assetname", asset.AssetName);
+            cmd.Parameters.AddWithValue("@initial", asset.InitialValue);
+            cmd.Parameters.AddWithValue("@current", asset.CurrentValue);
 
-                    //Define the parameters used in SQL statement, value for each parameter
-                    //is retrieved from respective class's property.
-                    cmd.Parameters.AddWithValue("", );
-                    //A connection to database must be opened before any operations made.
-                    conn.Open();
-                    int count = cmd.ExecuteNonQuery();
-                    //A connection should be closed after operations.
-                    conn.Close();
-                    //Return id when no error occurs.
-                    return count;
-                }
-        */
+            if (asset.PredictedValue != null)
+                // A branch is assigned
+                cmd.Parameters.AddWithValue("@predicted", asset.PredictedValue);
+            else // No branch is assigned
+                cmd.Parameters.AddWithValue("@predicted", DBNull.Value);
 
-        /*        
-        public Asset GetAssetDetails(string assetName)
+            //A connection to database must be opened before any operations made.
+            conn.Open();
+            asset.AssetID = (int)cmd.ExecuteScalar();
+            //A connection should be closed after operations.
+            conn.Close();
+            //Return id when no error occurs.
+            return asset.AssetID;
+        }
+
+
+
+        public Asset GetAssetDetails(int assetID)
         {
             Asset asset = new Asset();
             //Create a SqlCommand object from connection object
             SqlCommand cmd = conn.CreateCommand();
 
-            cmd.CommandText = @"SELECT * FROM Asset WHERE AssetName = @name AND  AssetOwner = @owner";
-            cmd.Parameters.AddWithValue("@name", ass);
+            cmd.CommandText = @"SELECT * FROM Asset WHERE AssetID = @id";
+            cmd.Parameters.AddWithValue("@id", assetID);
 
             //Open a database connection
             conn.Open();
@@ -68,7 +75,11 @@ namespace SDD_P02_Group1.DAL
                 //Read the record from database
                 while (reader.Read())
                 {
-                    holder.[] = []
+                    asset.AssetID = assetID;
+                    asset.AssetName = !reader.IsDBNull(1) ? reader.GetString(1) : null;
+                    asset.InitialValue = reader.GetInt32(2);
+                    asset.CurrentValue = reader.GetInt32(3);
+                    asset.PredictedValue = reader.GetInt32(4);
                 }
             }
             //Close data reader
@@ -77,51 +88,58 @@ namespace SDD_P02_Group1.DAL
             conn.Close();
             return asset;
         }
-        */
 
-        /*        public List<Asset> GetAllAsset()
+
+        public List<Asset> GetAllAsset(int userID)
+        {
+            List<Asset> assetList = new List<Asset>();
+            //Create a SqlCommand object from connection object
+            SqlCommand cmd = conn.CreateCommand();
+
+            cmd.CommandText = @"SELECT * FROM Asset WHERE UserID = @id";
+            cmd.Parameters.AddWithValue("@id", userID);
+
+            //Open a database connection
+            conn.Open();
+            //Execute SELCT SQL through a DataReader
+            SqlDataReader reader = cmd.ExecuteReader();
+
+            if (reader.HasRows)
+            {
+                while (reader.Read())
                 {
-                    List<Asset> assetList = new List<Asset>();
-                    //Create a SqlCommand object from connection object
-                    SqlCommand cmd = conn.CreateCommand();
-
-                    cmd.CommandText = @"SELECT * FROM Asset WHERE AssetOwner = @owner";
-                    cmd.Parameters.AddWithValue("@owner", ass);
-
-                    //Open a database connection
-                    conn.Open();
-                    //Execute SELCT SQL through a DataReader
-                    SqlDataReader reader = cmd.ExecuteReader();
-
-                    if (reader.HasRows)
-                    {
-                        while (reader.Read())
+                    assetList.Add(
+                    new Asset
                         {
-                            assetList.Add(
-                            new Asset
-                                {
-                                    StaffId = reader.GetInt32(0), //0: 1st column
-                                    Name = reader.GetString(1), //1: 2nd column
-                                }
-                            );
+                            AssetID = reader.GetInt32(0),
+                            AssetName = !reader.IsDBNull(1) ? reader.GetString(1) : null,
+                            InitialValue = reader.GetInt32(2),
+                            CurrentValue = reader.GetInt32(3),
+                            PredictedValue = reader.GetInt32(4),
+                            UserID = userID,
                         }
-                    }
-                    //Close data reader
-                    reader.Close();
-                    //Close database connection
-                    conn.Close();
-                    return assetList;
-                }*/
+                    );
+                }
+            }
+            //Close data reader
+            reader.Close();
+            //Close database connection
+            conn.Close();
+            return assetList;
+        }
 
-/*        public int EditAsset(//what ever information here)
+        public int EditAsset(Asset asset)
         {
             //Create a SqlCommand object from connection object
             SqlCommand cmd = conn.CreateCommand();
             //Specify an UPDATE SQL statement
-            cmd.CommandText = @"UPDATE [ ] SET []=@[] WHERE [] = @[]";
+            cmd.CommandText = @"UPDATE Asset SET AssetName=@name, InitialValue=@initial, CurrentValue=@current, PredictedValue=@predicted WHERE AssetID = @id";
             //Define the parameters used in SQL statement, value for each parameter
             //is retrieved from respective class's property.
-            cmd.Parameters.AddWithValue("@[]", []);
+            cmd.Parameters.AddWithValue("@name", asset.AssetName);
+            cmd.Parameters.AddWithValue("@initial", asset.InitialValue);
+            cmd.Parameters.AddWithValue("@current", asset.CurrentValue);
+            cmd.Parameters.AddWithValue("@predicted", asset.PredictedValue);
 
             //Open a database connection
             conn.Open();
@@ -130,18 +148,17 @@ namespace SDD_P02_Group1.DAL
             //Close the database connection
             conn.Close();
             return count;
-        }*/
+        }
 
-/*        public int DeleteAsset(//what ever information here)
+        public int DeleteAsset(int assetID)
         {
             //Create a SqlCommand object from connection object
             SqlCommand cmd = conn.CreateCommand();
             //Specify an UPDATE SQL statement
-            cmd.CommandText = @"DELETE FROM Asset WHERE [] = @[]";
+            cmd.CommandText = @"DELETE FROM Asset WHERE AssetID = @id";
             //Define the parameters used in SQL statement, value for each parameter
             //is retrieved from respective class's property.
-            cmd.Parameters.AddWithValue("@[]", []);
-
+            cmd.Parameters.AddWithValue("@id", assetID);
             //Open a database connection
             conn.Open();
             //ExecuteNonQuery is used for UPDATE and DELETE
@@ -149,6 +166,6 @@ namespace SDD_P02_Group1.DAL
             //Close the database connection
             conn.Close();
             return rowAffected;
-        }*/
+        }
     }
 }

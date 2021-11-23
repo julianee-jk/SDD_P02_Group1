@@ -33,7 +33,7 @@ namespace SDD_P02_Group1.DAL
             //Create a SqlCommand object from connection object
             SqlCommand cmd = conn.CreateCommand();
             //Specify an UPDATE SQL statement
-            cmd.CommandText = @"UPDATE [ ] SET Password=@password WHERE Email = @email";
+            cmd.CommandText = @"UPDATE AccountUser SET Password=@password WHERE Email = @email";
             //Define the parameters used in SQL statement, value for each parameter
             //is retrieved from respective class's property.
             cmd.Parameters.AddWithValue("@password", password);
