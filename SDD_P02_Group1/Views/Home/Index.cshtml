@@ -1,8 +1,26 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Home";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="text-center" style="margin-top: 8em">
+    <h2 style="color:gray">Welcome to</h2><br />
+    <img src="~/images/moolahlogo.png" alt="moolah_logo" /><br />
+    <h4 style="color:#0E152D">Manage. Track. Predict</h4>
+
+    @{
+        string userRole = "Unknown";
+
+        if (Context.Session.GetString("Role") != null)
+        {
+            <p style="margin-top: 4rem; color: #0E152D;">Hello! <span style="color: orange">@ViewData["UserName"]</span></p>
+            userRole = Context.Session.GetString("Role");
+            <p style="color: #0E152D;">You are logged in as a <span style="color: orange">@userRole</span></p>
+        }
+
+        else
+        {
+            <p style="margin-top: 4rem; color: #0E152D;">You are currently not logged in. <a asp-controller="Home" asp-action="Login">Please log in now</a>.</p>
+        }
+    }
+
 </div>
