@@ -12,9 +12,9 @@
 
         if (Context.Session.GetString("Role") != null)
         {
-            <p style="margin-top: 4rem; color: #0E152D;">Hello! <span style="color: orange">@ViewData["UserName"]</span></p>
+            <p style="margin-top: 4rem; color: #0E152D;">Hello! <span style="color: #a629c2 ">@ViewData["UserName"]</span></p>
             userRole = Context.Session.GetString("Role");
-            <p style="color: #0E152D;">You are logged in as a <span style="color: orange">@userRole</span></p>
+            <p style="color: #0E152D;">You are logged in as a <span style="color: #a629c2 ">@userRole</span></p>
         }
 
         else
