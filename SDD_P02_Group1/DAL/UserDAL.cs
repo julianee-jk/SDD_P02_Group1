@@ -126,43 +126,6 @@ namespace SDD_P02_Group1.DAL
             return user;
         }
 
-
-        public bool IsEmailExist(string email, int userId)
-        {
-            bool emailFound = false;
-
-            //Create a SqlCommand object and specify the SQL statement 
-            //to get a judge record with the email address to be validated
-            SqlCommand cmd = conn.CreateCommand();
-            cmd.CommandText = @"SELECT UserID FROM AccountUser WHERE Email=@selectedEmail";
-            cmd.Parameters.AddWithValue("@selectedEmail", email);
-
-            //Open a database connection and execute the SQL statement
-            conn.Open();
-
-            SqlDataReader reader = cmd.ExecuteReader();
-
-            if (reader.HasRows)
-            { //Records found
-                while (reader.Read())
-                {
-                    if (reader.GetInt32(0) != userId)
-                        //The email address is used by another competitor
-                        emailFound = true;
-                }
-            }
-
-            else
-            { //No record
-                emailFound = false; // The email address given does not exist
-            }
-
-            reader.Close();
-            conn.Close();
-
-            return emailFound;
-        }
-
         public int Add(User user)
         {
             //Create a SqlCommand object from connection object
@@ -192,6 +155,78 @@ namespace SDD_P02_Group1.DAL
 
             //Return id when no error occurs.
             return user.UserId;
+        }
+
+        public bool IsEmailExist(string email, int userId)
+        {
+            bool emailFound = false;
+
+            //Create a SqlCommand object and specify the SQL statement 
+            //to get a judge record with the email address to be validated
+            SqlCommand cmd = conn.CreateCommand();
+            cmd.CommandText = @"SELECT UserID FROM AccountUser WHERE Email=@selectedEmail";
+            cmd.Parameters.AddWithValue("@selectedEmail", email);
+
+            //Open a database connection and execute the SQL statement
+            conn.Open();
+
+            SqlDataReader reader = cmd.ExecuteReader();
+
+            if (reader.HasRows)
+            { //Records found
+                while (reader.Read())
+                {
+                    if (reader.GetInt32(0) != userId)
+                        //The email address is used by another user
+                        emailFound = true;
+                }
+            }
+
+            else
+            { //No record
+                emailFound = false; // The email address given does not exist
+            }
+
+            reader.Close();
+            conn.Close();
+
+            return emailFound;
+        }
+
+        public bool IsUserNameExist(string name, int userId)
+        {
+            bool nameFound = false;
+
+            //Create a SqlCommand object and specify the SQL statement 
+            //to get a judge record with the email address to be validated
+            SqlCommand cmd = conn.CreateCommand();
+            cmd.CommandText = @"SELECT UserID FROM AccountUser WHERE Username=@selectedName";
+            cmd.Parameters.AddWithValue("@selectedName", name);
+
+            //Open a database connection and execute the SQL statement
+            conn.Open();
+
+            SqlDataReader reader = cmd.ExecuteReader();
+
+            if (reader.HasRows)
+            { //Records found
+                while (reader.Read())
+                {
+                    if (reader.GetInt32(0) != userId)
+                        //The name is used by another user
+                        nameFound = true;
+                }
+            }
+
+            else
+            { //No record
+                nameFound = false; // The name given does not exist
+            }
+
+            reader.Close();
+            conn.Close();
+
+            return nameFound;
         }
     }
 }
