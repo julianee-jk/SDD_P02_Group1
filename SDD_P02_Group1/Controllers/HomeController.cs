@@ -1,14 +1,14 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using SDD_P02_Group1.DAL;
-using SDD_P02_Group1.Models;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Net.Mail;
 using System.Threading.Tasks;
+using SDD_P02_Group1.DAL;
+using SDD_P02_Group1.Models;
+using Microsoft.AspNetCore.Http;
 
 namespace SDD_P02_Group1.Controllers
 {
@@ -24,7 +24,40 @@ namespace SDD_P02_Group1.Controllers
 
         public IActionResult Index()
         {
+            if (HttpContext.Session.GetString("Role") == "User")
+            {
+                int userid = HttpContext.Session.GetInt32("UserID").Value;
+                ViewData["userName"] = UserContext.GetDetails(userid).Username;
+            }
             return View();
+        }
+
+        public ActionResult Login()
+        {
+            return View();
+        }
+
+        public ActionResult Create()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Create(User user)
+        {
+            if (ModelState.IsValid)
+            {
+                //Add user record to database
+                user.UserId = UserContext.Add(user);
+                //Redirect user to Home/Login view
+                return RedirectToAction("Login", "Home");
+            }
+            else
+            {
+                //Input validation fails, return to the Create view to display error message
+                return View(user);
+            }
         }
 
         public IActionResult Privacy()
@@ -78,6 +111,61 @@ namespace SDD_P02_Group1.Controllers
                 Console.WriteLine("Exception caught in CreateTestMessage4(): {0}",
                     ex.ToString());
             }
+        }
+
+        public ActionResult AccountLogin(IFormCollection formData)
+        {
+            // Read inputs from textboxes
+            // Email address converted to lowercase
+            string emailAddress = formData["txtEmail"].ToString().ToLower();
+            string password = formData["txtPassword"].ToString();
+
+            List<User> userList = UserContext.GetAllUsers(); // Check judge list
+
+            foreach (User user in userList)
+            {
+                if (emailAddress == user.EmailAddr.ToLower() && password == user.Password)
+                {
+                    // Store Email Address in session with the key “LoginID”
+                    HttpContext.Session.SetString("LoginID", emailAddress);
+
+                    // Store user role “User” as a string in session with the key “Role”
+                    HttpContext.Session.SetString("Role", "User");
+
+                    // Store CompetitorId as a int in session with the key “UserID”
+                    HttpContext.Session.SetInt32("UserID", user.UserId);
+
+                    // Redirect user to the "Index" view through an action
+                    return RedirectToAction("Index");
+                }
+            }
+
+            //if (emailAddress == "admin1@lcu.edu.sg" & password == "p@55Admin")
+            //{
+            //    // Store Email Address in session with the key “LoginID”
+            //    HttpContext.Session.SetString("LoginID", emailAddress);
+
+            //    // Store user role “Competitor” as a string in session with the key “Role”
+            //    HttpContext.Session.SetString("Role", "Admin");
+
+            //    // Redirect user to the "Index" view through an action
+            //    return RedirectToAction("Index");
+            //}
+
+            // Store an error message in TempData for display at the index view
+            TempData["LoginErrorMessage"] = "Invalid Login Credentials!";
+
+            // Redirect user back to the index view through an action
+            return RedirectToAction("Login");
+        }
+
+        public ActionResult SignOut()
+        {
+            // Clear all key-values pairs stored in session state
+            HttpContext.Session.Clear();
+
+            // Call the Index action of Home controller
+            return RedirectToAction("Index");
         }
     }
 }
