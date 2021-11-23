@@ -1,0 +1,33 @@
+﻿<nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-lg-3">
+    <div class="container">
+        <a class="navbar-brand" href="~/Home/Index"
+           style="color: orange; font-weight: bold; font-size: medium; word-break: break-word;">
+            Moo<span style="color: #0E152D">Lah</span>
+        </a>
+
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item">
+                    <a class="nav-link text-dark" href="#">Manage Assets</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-dark" href="#">Predict</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-dark" href="#">View Assets History</a>
+                </li>
+            </ul>
+
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a class="nav-link" asp-controller="Home" asp-action="SignOut" style="color: orange">Sign Out</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
