@@ -34,10 +34,12 @@ namespace SDD_P02_Group1.DAL
             SqlCommand cmd = conn.CreateCommand();
             //Specify an INSERT SQL statement which will
             //return the auto-generated StaffID after insertion
-            cmd.CommandText = @"INSERT INTO UserAsset (AssetName, InitialValue, CurrentValue, PredictedValue) OUTPUT INSERTED.AssetID VALUES (@assetname, @initial, @current, @predicted)";
+            cmd.CommandText = @"INSERT INTO UserAsset (AssetName, InitialValue, CurrentValue, PredictedValue) OUTPUT INSERTED.AssetID VALUES (@assetname, @initial, @current, @predicted, @userid)";
             cmd.Parameters.AddWithValue("@assetname", asset.AssetName);
             cmd.Parameters.AddWithValue("@initial", asset.InitialValue);
             cmd.Parameters.AddWithValue("@current", asset.CurrentValue);
+            cmd.Parameters.AddWithValue("@userid", asset.CurrentValue);
+
 
             if (asset.PredictedValue != null)
                 // A branch is assigned
