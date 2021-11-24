@@ -236,7 +236,7 @@ namespace SDD_P02_Group1.DAL
             //Create a SqlCommand object and specify the SQL statement 
             //to get a judge record with the email address to be validated
             SqlCommand cmd = conn.CreateCommand();
-            cmd.CommandText = @"SELECT UserID FROM AccountUser WHERE Email=@selectedEmail";
+            cmd.CommandText = @"SELECT * FROM AccountUser WHERE Email=@selectedEmail";
             cmd.Parameters.AddWithValue("@selectedEmail", email);
 
             //Open a database connection and execute the SQL statement
@@ -248,7 +248,8 @@ namespace SDD_P02_Group1.DAL
             { //Records found
                 while (reader.Read())
                 {
-                    if (reader.GetString(0) == email)
+                    Console.WriteLine("lolol " + reader.GetString(3));
+                    if (reader.GetString(3) == email)
                         //The email address is used by another user
                         emailFound = true;
                 }
