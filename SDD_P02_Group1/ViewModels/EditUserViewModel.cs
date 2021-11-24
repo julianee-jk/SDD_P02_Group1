@@ -4,16 +4,14 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace SDD_P02_Group1.Models
+namespace SDD_P02_Group1.ViewModels
 {
-    public class User
+    public class EditUserViewModel
     {
         [Display(Name = "ID")]
         public int UserId { get; set; }
 
         [Display(Name = "Username")]
-        [ValidateUserNameExists]
-        [Required(ErrorMessage = "Please enter a username!")]
         public string Username { get; set; }
 
         [Display(Name = "Password")]
@@ -26,8 +24,8 @@ namespace SDD_P02_Group1.Models
         [Required(ErrorMessage = "Please enter an email address!")]
         [StringLength(50, ErrorMessage = "Email Address cannot exceed 50 characters")]
         [EmailAddress]
-        [ValidateUserEmailExists]
         [RegularExpression(@"^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$", ErrorMessage = "Invalid Email Address!")]
         public string EmailAddr { get; set; }
+
     }
 }
