@@ -228,5 +228,42 @@ namespace SDD_P02_Group1.DAL
 
             return nameFound;
         }
+
+        public bool IsEmailExist2(string email)
+        {
+            bool emailFound = false;
+
+            //Create a SqlCommand object and specify the SQL statement 
+            //to get a judge record with the email address to be validated
+            SqlCommand cmd = conn.CreateCommand();
+            cmd.CommandText = @"SELECT * FROM AccountUser WHERE Email=@selectedEmail";
+            cmd.Parameters.AddWithValue("@selectedEmail", email);
+
+            //Open a database connection and execute the SQL statement
+            conn.Open();
+
+            SqlDataReader reader = cmd.ExecuteReader();
+
+            if (reader.HasRows)
+            { //Records found
+                while (reader.Read())
+                {
+                    Console.WriteLine("lolol " + reader.GetString(3));
+                    if (reader.GetString(3) == email)
+                        //The email address is used by another user
+                        emailFound = true;
+                }
+            }
+
+            else
+            { //No record
+                emailFound = false; // The email address given does not exist
+            }
+
+            reader.Close();
+            conn.Close();
+
+            return emailFound;
+        }
     }
 }

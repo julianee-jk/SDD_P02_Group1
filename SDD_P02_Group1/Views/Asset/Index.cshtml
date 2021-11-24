@@ -24,7 +24,7 @@
                     @item.AssetName
                 </td>
                 <td>
-                    <a asp-action="Details" asp-controller="Asset"
+                    <a asp-action="Edit" asp-controller="Asset"
                        asp-route-id="@item.AssetID" style="padding-left: 1em;">Details</a> |
 
                     <form asp-action="Delete" asp-controller="Asset" asp-route-id="@item.AssetID" enctype="multipart/form-data" class="form-check-inline" id="assetDeleteForm">

@@ -130,7 +130,7 @@ namespace SDD_P02_Group1.DAL
             return assetList;
         }
 
-        public int EditAsset(Asset asset)
+        public int EditAsset(Asset asset, int id)
         {
             //Create a SqlCommand object from connection object
             SqlCommand cmd = conn.CreateCommand();
@@ -141,7 +141,13 @@ namespace SDD_P02_Group1.DAL
             cmd.Parameters.AddWithValue("@name", asset.AssetName);
             cmd.Parameters.AddWithValue("@initial", asset.InitialValue);
             cmd.Parameters.AddWithValue("@current", asset.CurrentValue);
-            cmd.Parameters.AddWithValue("@predicted", asset.PredictedValue);
+            cmd.Parameters.AddWithValue("@id", id);
+
+            if (asset.PredictedValue != null)
+                // A branch is assigned
+                cmd.Parameters.AddWithValue("@predicted", asset.PredictedValue);
+            else // No branch is assigned
+                cmd.Parameters.AddWithValue("@predicted", DBNull.Value);
 
             //Open a database connection
             conn.Open();

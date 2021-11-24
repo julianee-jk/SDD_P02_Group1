@@ -28,7 +28,8 @@ namespace SDD_P02_Group1.Controllers
         // GET: AssetController/Details/5
         public ActionResult Details(int id)
         {
-            Asset asset = assetContext.GetAssetDetails(id);
+            Asset asset = assetsContext.GetAssetDetails(id);
+            ViewData["editable"] = "false";
 
             if (asset.PredictedValue == null)
             {
@@ -72,22 +73,44 @@ namespace SDD_P02_Group1.Controllers
         // GET: AssetController/Edit/5
         public ActionResult Edit(int id)
         {
-            return View();
+            Asset asset = assetsContext.GetAssetDetails(id);
+            TempData["assetID"] = id;
+            return View(asset);
         }
 
         // POST: AssetController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public ActionResult Edit(Asset asset)
         {
-            try
+        
+            if (ModelState.IsValid)
             {
-                return RedirectToAction(nameof(Index));
+                //Update staff record to database
+                Console.WriteLine("lolol" + TempData["assetID"]);
+                Console.WriteLine("lolol" + asset.CurrentValue);
+                assetsContext.EditAsset(asset, Convert.ToInt32(TempData["assetID"]));
+                return RedirectToAction("Index");
             }
-            catch
+            else
             {
+                //Input validation fails, return to the view
+                //to display error message
+                return View(asset);
+            }
+
+/*            if (ViewData["editable"] == "true")
+            {
+                assetsContext.EditAsset(asset);
+                ViewData["editable"] = "false";
                 return View();
             }
+            else
+            {
+                ViewData["editable"] = "true";
+                return View();
+            }*/
+
         }
 
         // GET: AssetController/Delete/5
