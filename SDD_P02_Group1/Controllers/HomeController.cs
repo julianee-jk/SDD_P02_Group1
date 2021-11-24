@@ -81,10 +81,12 @@ namespace SDD_P02_Group1.Controllers
 
             if (emailExists == false)
             {
+                TempData["NoEmailFoundError"] = "Email does not exist!";
                 return View("Login");
             }
             else
             {
+                TempData["NoEmailFoundError"] = "";
                 Random random = new Random();
                 string characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890!@#$%^&*()";
                 string password = "";

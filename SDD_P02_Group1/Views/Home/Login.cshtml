@@ -25,6 +25,14 @@
                 </div>
             </fieldset>
         </form>
+        @if (TempData["LoginErrorMessage"] != "")
+        {
+            <script type="text/javascript">
+                $(function () {
+                    $('#resetPasswordConfirmation').modal('show');
+            });
+            </script>
+        }
     </div>
 </div>
 
@@ -44,18 +52,20 @@
             <div class="modal-body">
                 Please enter the email you used to sign up. If the account exists, an email will be sent to it.
                 <br><br>
-                    <form method="post" action="~/Home/ResetPassword">
-                        <input type="email" class="form-control" name="passwordResetEmail">
+                <span class="text-danger">@TempData["NoEmailFoundError"]</span>
+                <form method="post" action="~/Home/ResetPassword">
+                    <input type="email" class="form-control" name="passwordResetEmail">
+                    <br>
+                    <div class="float-right">
                         <br>
-                        <div class="float-right">
-                            <br>
-                            <input type="submit" value="Confirm" class="btn btn-danger" />
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                        </div>
-                    </form>
+                        <input type="submit" value="Confirm" class="btn btn-danger" />
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    </div>
+                </form>
                 <div class="modal-footer">
                 </div>
             </div>
         </div>
     </div>
 </div>
+
