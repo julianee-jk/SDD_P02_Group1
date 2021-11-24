@@ -28,7 +28,7 @@ namespace SDD_P02_Group1.Controllers
         // GET: AssetController/Details/5
         public ActionResult Details(int id)
         {
-            Asset asset = assetsContext.GetAssetDetails(id);
+            Asset asset = assetContext.GetAssetDetails(id);
             ViewData["editable"] = "false";
 
             if (asset.PredictedValue == null)
@@ -73,7 +73,7 @@ namespace SDD_P02_Group1.Controllers
         // GET: AssetController/Edit/5
         public ActionResult Edit(int id)
         {
-            Asset asset = assetsContext.GetAssetDetails(id);
+            Asset asset = assetContext.GetAssetDetails(id);
             TempData["assetID"] = id;
             return View(asset);
         }
@@ -89,7 +89,7 @@ namespace SDD_P02_Group1.Controllers
                 //Update staff record to database
                 Console.WriteLine("lolol" + TempData["assetID"]);
                 Console.WriteLine("lolol" + asset.CurrentValue);
-                assetsContext.EditAsset(asset, Convert.ToInt32(TempData["assetID"]));
+                assetContext.EditAsset(asset, Convert.ToInt32(TempData["assetID"]));
                 return RedirectToAction("Index");
             }
             else
