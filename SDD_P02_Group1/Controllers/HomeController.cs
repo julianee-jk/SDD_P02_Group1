@@ -75,25 +75,35 @@ namespace SDD_P02_Group1.Controllers
         [HttpPost]
         public ActionResult ResetPassword(IFormCollection formData)
         {
-            Random random = new Random();
-            string characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890!@#$%^&*()";
-            string password = "";
-            for (int a = 0; a < 15; a++)
-            {
-                password = password + Convert.ToString(characters[random.Next(characters.Length)]);
-            }
-
             string email = formData["passwordResetEmail"].ToString();
-            UserContext.ResetPassword(email, password);
+            bool emailExists = UserContext.IsEmailExist2(email);
+            Console.WriteLine(emailExists);
 
-            string messageBody = @"Dear user," + "\n" +
-                                      "You are currently attempting a password reset." + "\n" +
-                                      "Your password has now been changed to the one below. \n\n" +
-                                      password + "\n\n"
-                                  + "Please use this password to log in. Note that you can change it later after logging in";
-            SendEmail("Reset password", messageBody, email);
+            if (emailExists == false)
+            {
+                return View("Login");
+            }
+            else
+            {
+                Random random = new Random();
+                string characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890!@#$%^&*()";
+                string password = "";
+                for (int a = 0; a < 15; a++)
+                {
+                    password = password + Convert.ToString(characters[random.Next(characters.Length)]);
+                }
 
-            return RedirectToAction("Index");
+
+                UserContext.ResetPassword(email, password);
+
+                string messageBody = @"Dear user," + "\n" +
+                                          "You are currently attempting a password reset." + "\n" +
+                                          "Your password has now been changed to the one below. \n\n" +
+                                          password + "\n\n"
+                                      + "Please use this password to log in. Note that you can change it later after logging in";
+                SendEmail("Reset password", messageBody, email);
+                return RedirectToAction("Index");
+            }
         }
 
         public static void SendEmail(string messageBody, string messageContent, string email)
