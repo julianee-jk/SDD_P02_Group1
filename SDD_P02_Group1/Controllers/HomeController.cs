@@ -86,11 +86,11 @@ namespace SDD_P02_Group1.Controllers
             string email = formData["passwordResetEmail"].ToString();
             UserContext.ResetPassword(email, password);
 
-            string messageBody = @"Dear user, \n" +
-                                      "You are currently attempting a password reset. \n" + "\n" +
-                                      "Your password has now been changed to the one below. \n" +
-                                      password + "\n"
-                                  + "Please use this password to log in. Note that you can change it later";
+            string messageBody = @"Dear user," + "\n" +
+                                      "You are currently attempting a password reset." + "\n" +
+                                      "Your password has now been changed to the one below. \n\n" +
+                                      password + "\n\n"
+                                  + "Please use this password to log in. Note that you can change it later after logging in";
             SendEmail("Reset password", messageBody, email);
 
             return RedirectToAction("Index");
@@ -113,7 +113,7 @@ namespace SDD_P02_Group1.Controllers
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Exception caught in CreateTestMessage4(): {0}",
+                Console.WriteLine("Exception caught in sending email(): {0}",
                     ex.ToString());
             }
         }
