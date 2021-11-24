@@ -14,22 +14,21 @@ namespace SDD_P02_Group1.Controllers
 {
     public class AssetController : Controller
     {
-        private AssetsDAL assetsContext = new AssetsDAL();
-        
-
+        private AssetsDAL assetContext = new AssetsDAL();
+        private UserDAL userContext = new UserDAL();
 
         // GET: AssetController
         public ActionResult Index()
         {
             int userid = HttpContext.Session.GetInt32("UserID").Value;
-            List<Asset> assetsList = assetsContext.GetAllAsset(userid);
+            List<Asset> assetsList = assetContext.GetAllAsset(userid);
             return View(assetsList);
         }
 
         // GET: AssetController/Details/5
         public ActionResult Details(int id)
         {
-            Asset asset = assetsContext.GetAssetDetails(id);
+            Asset asset = assetContext.GetAssetDetails(id);
 
             if (asset.PredictedValue == null)
             {
@@ -47,11 +46,22 @@ namespace SDD_P02_Group1.Controllers
         // POST: AssetController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public ActionResult Create(Asset asset)
         {
             try
             {
-                return RedirectToAction(nameof(Index));
+                if (ModelState.IsValid)
+                {
+                    //Add user record to database
+                    assetContext.AddAsset(asset, HttpContext.Session.GetInt32("UserID").Value);
+                    //Redirect user to Home/Login view
+                    return RedirectToAction("Index", "Home");
+                }
+                else
+                {
+                    //Input validation fails, return to the Create view to display error message
+                    return RedirectToAction("Create", "Asset");
+                }
             }
             catch
             {
@@ -92,7 +102,7 @@ namespace SDD_P02_Group1.Controllers
         public ActionResult Delete(int id)
         {
             // Delete the staff record from database
-            assetsContext.DeleteAsset(id);
+            assetContext.DeleteAsset(id);
             return RedirectToAction("Index");
         }
     }

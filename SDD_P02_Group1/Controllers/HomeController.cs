@@ -47,7 +47,7 @@ namespace SDD_P02_Group1.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create(User user)
         {
-            if (ModelState.IsValid)
+            if (ModelState.IsValid) 
             {
                 //Add user record to database
                 user.UserId = UserContext.Add(user);
