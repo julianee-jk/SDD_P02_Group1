@@ -28,7 +28,7 @@ namespace SDD_P02_Group1.DAL
             conn = new SqlConnection(strConn);
         }
 
-        public int AddAsset(Asset asset)
+        public int AddAsset(Asset asset, int userID)
         {
             //Create a SqlCommand object from connection object
             SqlCommand cmd = conn.CreateCommand();
@@ -38,7 +38,7 @@ namespace SDD_P02_Group1.DAL
             cmd.Parameters.AddWithValue("@assetname", asset.AssetName);
             cmd.Parameters.AddWithValue("@initial", asset.InitialValue);
             cmd.Parameters.AddWithValue("@current", asset.CurrentValue);
-            cmd.Parameters.AddWithValue("@userid", asset.CurrentValue);
+            cmd.Parameters.AddWithValue("@userid", userID);
 
 
             if (asset.PredictedValue != null)
