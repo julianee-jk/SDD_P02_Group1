@@ -81,7 +81,7 @@ namespace SDD_P02_Group1.Controllers
         }
 
         // GET: AssetController/Delete/5
-        public ActionResult Delete(int id)
+        public ActionResult Delete()
         {
             return View();
         }
@@ -89,16 +89,12 @@ namespace SDD_P02_Group1.Controllers
         // POST: AssetController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        public ActionResult Delete(int id)
         {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
+            // Delete the staff record from database
+            Console.WriteLine("fuckfuckfuckfuckfuckfuckfuckfuck" + id);
+            assetsContext.DeleteAsset(id);
+            return RedirectToAction("Index");
         }
     }
 }
