@@ -62,7 +62,7 @@ namespace SDD_P02_Group1.DAL
             //Create a SqlCommand object from connection object
             SqlCommand cmd = conn.CreateCommand();
 
-            cmd.CommandText = @"SELECT * FROM Asset WHERE AssetID = @id";
+            cmd.CommandText = @"SELECT * FROM UserAsset WHERE AssetID = @id";
             cmd.Parameters.AddWithValue("@id", assetID);
 
             //Open a database connection
@@ -76,10 +76,10 @@ namespace SDD_P02_Group1.DAL
                 while (reader.Read())
                 {
                     asset.AssetID = assetID;
-                    asset.AssetName = !reader.IsDBNull(1) ? reader.GetString(1) : null;
-                    asset.InitialValue = reader.GetInt32(2);
-                    asset.CurrentValue = reader.GetInt32(3);
-                    asset.PredictedValue = reader.GetInt32(4);
+                    asset.AssetName = reader.GetString(1);
+                    asset.InitialValue = reader.GetDecimal(2);
+                    asset.CurrentValue = reader.GetDecimal(3);
+                    asset.PredictedValue = !reader.IsDBNull(4) ? reader.GetDecimal(4) : (decimal?)null;
                 }
             }
             //Close data reader
@@ -96,7 +96,7 @@ namespace SDD_P02_Group1.DAL
             //Create a SqlCommand object from connection object
             SqlCommand cmd = conn.CreateCommand();
 
-            cmd.CommandText = @"SELECT * FROM Asset WHERE UserID = @id";
+            cmd.CommandText = @"SELECT * FROM UserAsset WHERE UserID = @id";
             cmd.Parameters.AddWithValue("@id", userID);
 
             //Open a database connection
@@ -112,13 +112,13 @@ namespace SDD_P02_Group1.DAL
                     new Asset
                         {
                             AssetID = reader.GetInt32(0),
-                            AssetName = !reader.IsDBNull(1) ? reader.GetString(1) : null,
-                            InitialValue = reader.GetInt32(2),
-                            CurrentValue = reader.GetInt32(3),
-                            PredictedValue = reader.GetInt32(4),
+                            AssetName = reader.GetString(1),
+                            InitialValue = reader.GetDecimal(2),
+                            CurrentValue = reader.GetDecimal(3),
+                            PredictedValue = !reader.IsDBNull(4) ? reader.GetDecimal(4) : (decimal?)null,
                             UserID = userID,
                         }
-                    );
+                    );;
                 }
             }
             //Close data reader
@@ -133,7 +133,7 @@ namespace SDD_P02_Group1.DAL
             //Create a SqlCommand object from connection object
             SqlCommand cmd = conn.CreateCommand();
             //Specify an UPDATE SQL statement
-            cmd.CommandText = @"UPDATE Asset SET AssetName=@name, InitialValue=@initial, CurrentValue=@current, PredictedValue=@predicted WHERE AssetID = @id";
+            cmd.CommandText = @"UPDATE UserAsset SET AssetName=@name, InitialValue=@initial, CurrentValue=@current, PredictedValue=@predicted WHERE AssetID = @id";
             //Define the parameters used in SQL statement, value for each parameter
             //is retrieved from respective class's property.
             cmd.Parameters.AddWithValue("@name", asset.AssetName);
@@ -155,7 +155,7 @@ namespace SDD_P02_Group1.DAL
             //Create a SqlCommand object from connection object
             SqlCommand cmd = conn.CreateCommand();
             //Specify an UPDATE SQL statement
-            cmd.CommandText = @"DELETE FROM Asset WHERE AssetID = @id";
+            cmd.CommandText = @"DELETE FROM UserAsset WHERE AssetID = @id";
             //Define the parameters used in SQL statement, value for each parameter
             //is retrieved from respective class's property.
             cmd.Parameters.AddWithValue("@id", assetID);

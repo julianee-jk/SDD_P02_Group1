@@ -4,7 +4,7 @@
     ViewData["Title"] = "Account";
 }
 
-<h2 style="margin-top: 2em;">Hello, <span style="color: #7f218a;">@ViewData["userName"]</span></h2>
+<h2 style="margin-top: 2em;">Hello, <span style="color: #7f218a;">@Context.Session.GetString("Username")</span></h2>
 
 <div>
     <hr />

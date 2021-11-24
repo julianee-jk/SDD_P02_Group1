@@ -1,0 +1,33 @@
+﻿@model IEnumerable<SDD_P02_Group1.Models.Asset>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h2 style="margin-top: 2em;"><span style="color: #7f218a;">Assets</span></h2>
+
+<p>
+    <a asp-action="Create">Add New Asset</a>
+</p>
+<table>
+    <thead>
+        <tr>
+            <th>Asset Name</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @item.AssetName
+                </td>
+                <td>
+                    <a asp-action="Details" asp-controller="Asset"
+                       asp-route-id="@item.AssetID">Details</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

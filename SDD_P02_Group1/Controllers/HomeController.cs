@@ -27,7 +27,7 @@ namespace SDD_P02_Group1.Controllers
             if (HttpContext.Session.GetString("Role") == "User")
             {
                 int userid = HttpContext.Session.GetInt32("UserID").Value;
-                ViewData["userName"] = UserContext.GetDetails(userid).Username;
+                HttpContext.Session.SetString("Username", UserContext.GetDetails(userid).Username);
                 ViewData["userEmail"] = UserContext.GetDetails(userid).EmailAddr;
             }
             return View();
