@@ -92,7 +92,6 @@ namespace SDD_P02_Group1.Controllers
         public ActionResult Delete(int id)
         {
             // Delete the staff record from database
-            Console.WriteLine("fuckfuckfuckfuckfuckfuckfuckfuck" + id);
             assetsContext.DeleteAsset(id);
             return RedirectToAction("Index");
         }
