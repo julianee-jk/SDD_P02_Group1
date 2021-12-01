@@ -149,7 +149,7 @@ namespace SDD_P02_Group1.Controllers
                     // Store user role “User” as a string in session with the key “Role”
                     HttpContext.Session.SetString("Role", "User");
 
-                    // Store CompetitorId as a int in session with the key “UserID”
+                    // Store UserId as a int in session with the key “UserID”
                     HttpContext.Session.SetInt32("UserID", user.UserId);
 
                     // Redirect user to the "Index" view through an action

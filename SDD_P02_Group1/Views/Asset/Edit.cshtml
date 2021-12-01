@@ -10,22 +10,22 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="AssetName" class="control-label"></label><br />
-                <input asp-for="AssetName" readonly class="form-control-plaintext" id="change1"/>
+                <input asp-for="AssetName" readonly class="form-control-plaintext" id="change1" required/>
                 <span asp-validation-for="AssetName" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="InitialValue" class="control-label"></label>
-                <input asp-for="InitialValue" readonly class="form-control-plaintext" id="change2" />
+                <input asp-for="InitialValue" readonly class="form-control-plaintext" id="change2" required/>
                 <span asp-validation-for="InitialValue" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="CurrentValue" class="control-label"></label>
-                <input asp-for="CurrentValue" readonly class="form-control-plaintext" id="change3" />
+                <input asp-for="CurrentValue" readonly class="form-control-plaintext" id="change3" required/>
                 <span asp-validation-for="CurrentValue" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="PredictedValue" class="control-label"></label>
-                <input asp-for="PredictedValue" readonly class="form-control-plaintext" id="change4" />
+                <input asp-for="PredictedValue" readonly class="form-control-plaintext" id="change4" required/>
                 <span asp-validation-for="PredictedValue" class="text-danger"></span>
             </div>
                 <div class="form-group">

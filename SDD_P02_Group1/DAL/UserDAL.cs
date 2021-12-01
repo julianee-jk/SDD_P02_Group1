@@ -6,6 +6,7 @@ using Microsoft.Extensions.Configuration;
 using System.IO;
 using System.Data.SqlClient;
 using SDD_P02_Group1.Models;
+using SDD_P02_Group1.ViewModels;
 
 namespace SDD_P02_Group1.DAL
 {
@@ -124,6 +125,29 @@ namespace SDD_P02_Group1.DAL
             //Close database connection
             conn.Close();
             return user;
+        }
+
+        public int EditUser(EditUserViewModel user, int id)
+        {
+            //Create a SqlCommand object from connection object
+            SqlCommand cmd = conn.CreateCommand();
+            //Specify an UPDATE SQL statement
+            cmd.CommandText = @"UPDATE AccountUser SET UserName=@name, Password=@password, Email=@email WHERE UserID = @id";
+            //Define the parameters used in SQL statement, value for each parameter
+            //is retrieved from respective class's property.
+            cmd.Parameters.AddWithValue("@name", user.Username);
+            cmd.Parameters.AddWithValue("@password", user.Password);
+            cmd.Parameters.AddWithValue("@email", user.EmailAddr);
+            cmd.Parameters.AddWithValue("@id", id);
+
+
+            //Open a database connection
+            conn.Open();
+            //ExecuteNonQuery is used for UPDATE and DELETE
+            int count = cmd.ExecuteNonQuery();
+            //Close the database connection
+            conn.Close();
+            return count;
         }
 
         public int Add(User user)

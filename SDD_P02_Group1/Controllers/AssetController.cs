@@ -49,14 +49,16 @@ namespace SDD_P02_Group1.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create(Asset asset)
         {
+
             try
             {
                 if (ModelState.IsValid)
                 {
+                   
                     //Add user record to database
                     assetContext.AddAsset(asset, HttpContext.Session.GetInt32("UserID").Value);
                     //Redirect user to Home/Login view
-                    return RedirectToAction("Index", "Home");
+                    return RedirectToAction("Index", "Asset");
                 }
                 else
                 {
@@ -89,7 +91,7 @@ namespace SDD_P02_Group1.Controllers
                 //Update staff record to database
                 Console.WriteLine("lolol" + TempData["assetID"]);
                 Console.WriteLine("lolol" + asset.CurrentValue);
-                assetsContext.EditAsset(asset, Convert.ToInt32(TempData["assetID"]));
+                assetContext.EditAsset(asset, Convert.ToInt32(TempData["assetID"]));
                 return RedirectToAction("Index");
             }
             else

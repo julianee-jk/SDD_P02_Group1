@@ -8,6 +8,7 @@ using System.Net.Mail;
 using System.Threading.Tasks;
 using SDD_P02_Group1.DAL;
 using SDD_P02_Group1.Models;
+using SDD_P02_Group1.ViewModels;
 using Microsoft.AspNetCore.Http;
 namespace SDD_P02_Group1.Controllers
 {
@@ -27,9 +28,37 @@ namespace SDD_P02_Group1.Controllers
         }
 
         // GET: AccountController/Edit/5
-        public ActionResult Edit(int userid)
+        public ActionResult Edit()
         {
-            return View();
+            EditUserViewModel ev = new EditUserViewModel();
+            int userid = HttpContext.Session.GetInt32("UserID").Value;
+            User user = UserContext.GetDetails(userid);
+
+            ev.UserId = userid;
+            ev.Username = user.Username;
+            ev.Password = user.Password;
+            ev.EmailAddr = user.EmailAddr;
+
+            return View(ev);
+        }
+
+        // POST: AccountController/Edit/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Edit(EditUserViewModel user)
+        {
+            if (ModelState.IsValid)
+            {
+                //Update user record to database
+                UserContext.EditUser(user, HttpContext.Session.GetInt32("UserID").Value);
+                return RedirectToAction("Index");
+            }
+            else
+            {
+                //Input validation fails, return to the view
+                //to display error message
+                return View(user);
+            }
         }
     }
 }
