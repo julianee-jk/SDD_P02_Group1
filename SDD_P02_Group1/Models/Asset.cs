@@ -18,6 +18,15 @@ namespace SDD_P02_Group1.Models
         public string AssetName { get; set; }
 
         [Required]
+        [StringLength(50, ErrorMessage = "Invalid! Type cannot exceed 50 characters")]
+        [Display(Name = "Asset Type")]
+        public string AssetType { get; set; }
+
+        [StringLength(200, ErrorMessage = "Invalid! Description cannot exceed 50 characters")]
+        [Display(Name = "Description")]
+        public string? AssetDesc { get; set; }
+
+        [Required]
         [Display(Name = "Initial value")]
         public decimal InitialValue { get; set; }  
         

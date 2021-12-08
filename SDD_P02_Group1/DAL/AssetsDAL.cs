@@ -34,8 +34,9 @@ namespace SDD_P02_Group1.DAL
             SqlCommand cmd = conn.CreateCommand();
             //Specify an INSERT SQL statement which will
             //return the auto-generated StaffID after insertion
-            cmd.CommandText = @"INSERT INTO UserAsset (AssetName, InitialValue, CurrentValue, PredictedValue, UserID) OUTPUT INSERTED.AssetID VALUES (@assetname, @initial, @current, @predicted, @userid)";
+            cmd.CommandText = @"INSERT INTO UserAsset (AssetName, AssetType, AssetDesc, InitialValue, CurrentValue, PredictedValue, UserID) OUTPUT INSERTED.AssetID VALUES (@assetname, @assettype, @desc, @initial, @current, @predicted, @userid)";
             cmd.Parameters.AddWithValue("@assetname", asset.AssetName);
+            cmd.Parameters.AddWithValue("@assettype", asset.AssetType);
             cmd.Parameters.AddWithValue("@initial", asset.InitialValue);
             cmd.Parameters.AddWithValue("@current", asset.CurrentValue);
             cmd.Parameters.AddWithValue("@userid", userID);
@@ -45,6 +46,12 @@ namespace SDD_P02_Group1.DAL
                 cmd.Parameters.AddWithValue("@predicted", asset.PredictedValue);
             else // No branch is assigned
                 cmd.Parameters.AddWithValue("@predicted", DBNull.Value);
+
+            if (asset.AssetDesc != null)
+                // A branch is assigned
+                cmd.Parameters.AddWithValue("@desc", asset.AssetDesc);
+            else // No branch is assigned
+                cmd.Parameters.AddWithValue("@desc", DBNull.Value);
 
             //A connection to database must be opened before any operations made.
             conn.Open();
@@ -78,9 +85,11 @@ namespace SDD_P02_Group1.DAL
                 {
                     asset.AssetID = assetID;
                     asset.AssetName = reader.GetString(1);
-                    asset.InitialValue = reader.GetDecimal(2);
-                    asset.CurrentValue = reader.GetDecimal(3);
-                    asset.PredictedValue = !reader.IsDBNull(4) ? reader.GetDecimal(4) : (decimal?)null;
+                    asset.AssetType = reader.GetString(2);
+                    asset.AssetDesc = !reader.IsDBNull(3) ? reader.GetString(3) : (string?)null;
+                    asset.InitialValue = reader.GetDecimal(4);
+                    asset.CurrentValue = reader.GetDecimal(5);
+                    asset.PredictedValue = !reader.IsDBNull(6) ? reader.GetDecimal(6) : (decimal?)null;
                 }
             }
             //Close data reader
@@ -114,9 +123,11 @@ namespace SDD_P02_Group1.DAL
                         {
                             AssetID = reader.GetInt32(0),
                             AssetName = reader.GetString(1),
-                            InitialValue = reader.GetDecimal(2),
-                            CurrentValue = reader.GetDecimal(3),
-                            PredictedValue = !reader.IsDBNull(4) ? reader.GetDecimal(4) : (decimal?)null,
+                            AssetType = reader.GetString(2),
+                            AssetDesc = !reader.IsDBNull(3) ? reader.GetString(3) : (string?)null,
+                            InitialValue = reader.GetDecimal(4),
+                            CurrentValue = reader.GetDecimal(5),
+                            PredictedValue = !reader.IsDBNull(6) ? reader.GetDecimal(6) : (decimal?)null,
                             UserID = userID,
                         }
                     );;
@@ -134,10 +145,11 @@ namespace SDD_P02_Group1.DAL
             //Create a SqlCommand object from connection object
             SqlCommand cmd = conn.CreateCommand();
             //Specify an UPDATE SQL statement
-            cmd.CommandText = @"UPDATE UserAsset SET AssetName=@name, InitialValue=@initial, CurrentValue=@current, PredictedValue=@predicted WHERE AssetID = @id";
+            cmd.CommandText = @"UPDATE UserAsset SET AssetName=@name,  AssetType=@type, AssetDesc=@desc, InitialValue=@initial, CurrentValue=@current, PredictedValue=@predicted WHERE AssetID = @id";
             //Define the parameters used in SQL statement, value for each parameter
             //is retrieved from respective class's property.
             cmd.Parameters.AddWithValue("@name", asset.AssetName);
+            cmd.Parameters.AddWithValue("@type", asset.AssetType);
             cmd.Parameters.AddWithValue("@initial", asset.InitialValue);
             cmd.Parameters.AddWithValue("@current", asset.CurrentValue);
             cmd.Parameters.AddWithValue("@id", id);
@@ -147,6 +159,12 @@ namespace SDD_P02_Group1.DAL
                 cmd.Parameters.AddWithValue("@predicted", asset.PredictedValue);
             else // No branch is assigned
                 cmd.Parameters.AddWithValue("@predicted", DBNull.Value);
+
+            if (asset.AssetDesc != null)
+                // A branch is assigned
+                cmd.Parameters.AddWithValue("@desc", asset.AssetDesc);
+            else // No branch is assigned
+                cmd.Parameters.AddWithValue("@desc", DBNull.Value);
 
             //Open a database connection
             conn.Open();
