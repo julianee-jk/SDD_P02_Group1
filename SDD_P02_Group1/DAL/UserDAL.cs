@@ -127,7 +127,7 @@ namespace SDD_P02_Group1.DAL
             return user;
         }
 
-        public int EditUser(EditUserViewModel user, int id)
+        public int EditUser(User user, int id)
         {
             //Create a SqlCommand object from connection object
             SqlCommand cmd = conn.CreateCommand();
@@ -200,9 +200,15 @@ namespace SDD_P02_Group1.DAL
             { //Records found
                 while (reader.Read())
                 {
-                    if (reader.GetInt32(0) != userId)
+                    if (reader.GetInt32(0) == userId)
+                    {
+                        break;
+                    }
+                    else if (reader.GetInt32(0) != userId)
+                    {
                         //The email address is used by another user
                         emailFound = true;
+                    }
                 }
             }
 
@@ -236,9 +242,16 @@ namespace SDD_P02_Group1.DAL
             { //Records found
                 while (reader.Read())
                 {
-                    if (reader.GetInt32(0) != userId)
+                    if (reader.GetInt32(0) == userId)
+                    {
+                        nameFound = false;
+                    }
+                    else if (reader.GetInt32(0) != userId)
+                    {
                         //The name is used by another user
                         nameFound = true;
+                    }
+
                 }
             }
 
