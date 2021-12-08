@@ -1,4 +1,4 @@
-﻿@model SDD_P02_Group1.Models.Liability
+﻿@model IEnumerable<SDD_P02_Group1.Models.Liability>
 
 @{
     ViewData["Title"] = "Index";
@@ -9,3 +9,29 @@
 <p>
     <a asp-controller="Liability" asp-action="Create">Add New Liability</a>
 </p>
+<table>
+    <thead>
+        <tr>
+            <th>Asset Name</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @item.LiabilityName
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-controller="Liability"
+                       asp-route-id="@item.LiabilityID" style="padding-left: 1em;">Details</a> |
+
+                    <form asp-action="Delete" asp-controller="Liability" asp-route-id="@item.LiabilityID" enctype="multipart/form-data" class="form-check-inline" id="assetDeleteForm">
+                        <a href="#" data-toggle="modal" data-target="#deleteAssetConfirmation">Delete</a>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

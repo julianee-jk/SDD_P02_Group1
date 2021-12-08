@@ -34,12 +34,33 @@ namespace SDD_P02_Group1.DAL
             SqlCommand cmd = conn.CreateCommand();
             //Specify an INSERT SQL statement which will
             //return the auto-generated StaffID after insertion
-            cmd.CommandText = @"INSERT INTO [] (LiabilityName, Description, DueDate, AmountDue, UserID) OUTPUT INSERTED.LiabilityID VALUES (@name, @description, @date, @amount, @userid)";
+            cmd.CommandText = @"INSERT INTO UserLiability (LiabilityName, LiabilityType, LiabilityDesc, Cost, DueDate, RecurringType, RecurringDuration, UserID) OUTPUT INSERTED.LiabilityID VALUES 
+(@name, @type, @description, @cost, @date, @rtype, @duration, @userid)";
+
             cmd.Parameters.AddWithValue("@name", liability.LiabilityName);
-            cmd.Parameters.AddWithValue("@description", liability.Description);
-            cmd.Parameters.AddWithValue("@date", liability.DueDate);
-            cmd.Parameters.AddWithValue("@amount", liability.AmountDue);
+            cmd.Parameters.AddWithValue("@type", liability.LiabilityType);
+            cmd.Parameters.AddWithValue("@cost", liability.Cost);
+            cmd.Parameters.AddWithValue("@rtype", liability.RecurringType);
             cmd.Parameters.AddWithValue("@userid", userID);
+
+            if (liability.LiabilityDesc != null)
+                // A branch is assigned
+                cmd.Parameters.AddWithValue("@description", liability.LiabilityDesc);
+            else // No branch is assigned
+                cmd.Parameters.AddWithValue("@description", DBNull.Value);
+
+            if (liability.DueDate != null)
+                // A branch is assigned
+                cmd.Parameters.AddWithValue("@date", liability.DueDate);
+            else // No branch is assigned
+                cmd.Parameters.AddWithValue("@date", DBNull.Value);
+
+            if (liability.RecurringDuration != null)
+                // A branch is assigned
+                cmd.Parameters.AddWithValue("@duration", liability.RecurringDuration);
+            else // No branch is assigned
+                cmd.Parameters.AddWithValue("@duration", DBNull.Value);
+
 
 
             //A connection to database must be opened before any operations made.
@@ -57,7 +78,7 @@ namespace SDD_P02_Group1.DAL
             //Create a SqlCommand object from connection object
             SqlCommand cmd = conn.CreateCommand();
 
-            cmd.CommandText = @"SELECT * FROM [] WHERE LiabilityID = @id";
+            cmd.CommandText = @"SELECT * FROM UserLiability WHERE LiabilityID = @id";
             cmd.Parameters.AddWithValue("@id", liabilityId);
 
             //Open a database connection
@@ -72,9 +93,13 @@ namespace SDD_P02_Group1.DAL
                 {
                     liability.LiabilityID = liabilityId;
                     liability.LiabilityName = reader.GetString(1);
-                    liability.Description = reader.GetString(2);
-                    liability.DueDate = reader.GetDateTime(3);
-                    liability.AmountDue = reader.GetDecimal(4);
+                    liability.LiabilityType = reader.GetString(2);
+                    liability.LiabilityDesc = !reader.IsDBNull(3) ? reader.GetString(3) : (string?)null;
+                    liability.Cost = reader.GetDecimal(4);
+                    liability.DueDate = !reader.IsDBNull(5) ? reader.GetDateTime(5) : (DateTime?)null;
+                    liability.RecurringType = reader.GetString(6);
+                    liability.RecurringDuration = !reader.IsDBNull(7) ? reader.GetInt32(7) : (int?)null;
+                    liability.UserID = reader.GetInt32(6);
                 }
             }
             //Close data reader
@@ -82,6 +107,47 @@ namespace SDD_P02_Group1.DAL
             //Close database connection
             conn.Close();
             return liability;
+        }
+
+        public List<Liability> GetAllLiability(int userid)
+        {
+            List<Liability> liabilityList = new List<Liability>();
+            //Create a SqlCommand object from connection object
+            SqlCommand cmd = conn.CreateCommand();
+
+            cmd.CommandText = @"SELECT * FROM UserLiability WHERE UserID = @id";
+            cmd.Parameters.AddWithValue("@id", userid);
+
+            //Open a database connection
+            conn.Open();
+            //Execute SELCT SQL through a DataReader
+            SqlDataReader reader = cmd.ExecuteReader();
+
+            if (reader.HasRows)
+            {
+                while (reader.Read())
+                {
+                    liabilityList.Add(
+                    new Liability
+                        {
+                            LiabilityID = reader.GetInt32(0),
+                            LiabilityName = reader.GetString(1),
+                            LiabilityType = reader.GetString(2),
+                            LiabilityDesc = !reader.IsDBNull(3) ? reader.GetString(3) : (string?)null,
+                            Cost = reader.GetDecimal(4),
+                            DueDate = !reader.IsDBNull(5) ? reader.GetDateTime(5) : (DateTime?)null,
+                            RecurringType = reader.GetString(6),
+                            RecurringDuration = !reader.IsDBNull(7) ? reader.GetInt32(7) : (int?)null,
+                            UserID = userid,
+                        }
+                    );
+                }
+            }
+            //Close data reader
+            reader.Close();
+            //Close database connection
+            conn.Close();
+            return liabilityList;
         }
     }
 }

@@ -1,0 +1,38 @@
+﻿@model IEnumerable<SDD_P02_Group1.Models.Liability>
+
+@{ 
+    var today = DateTime.Now;
+}
+
+@if (Model.ToList().Count > 0)
+{
+    <div class="table-responsive">
+        <table id="ViewLiability" class="table table-striped">
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    if (item.DueDate != null && ((Convert.ToDateTime(item.DueDate) - today).TotalDays <= 7) && (Convert.ToDateTime(item.DueDate) - today).TotalDays >= 0)
+                    {
+                        Console.WriteLine("Yes" + (Convert.ToDateTime(item.DueDate) - today).TotalDays);
+                        <tr>
+                            <td>@item.LiabilityName</td>
+                            <td>
+                                <span class="text-primary">Due Soon</span>
+                            </td>
+                        </tr>
+                    }
+                    else if (item.DueDate != null && ((Convert.ToDateTime(item.DueDate) - today).TotalDays < 0))
+                    {
+                        Console.WriteLine("No" + (Convert.ToDateTime(item.DueDate) - today).TotalDays);
+                        <tr>
+                            <td>@item.LiabilityName</td>
+                            <td>
+                                <span class="text-danger">Overdue</span>
+                            </td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+}

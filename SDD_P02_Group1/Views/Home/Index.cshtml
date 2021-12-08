@@ -1,4 +1,6 @@
-﻿@{
+﻿@model IEnumerable<SDD_P02_Group1.Models.Liability>
+
+@{
     ViewData["Title"] = "Home";
 }
 
@@ -15,6 +17,10 @@
             <p style="margin-top: 4rem; color: #0E152D;">Hello! <span style="color: #a629c2 ">@Context.Session.GetString("Username")</span></p>
             userRole = Context.Session.GetString("Role");
             <p style="color: #0E152D;">You are logged in as a <span style="color: #a629c2 ">@userRole</span></p>
+
+            <div class="text-center">
+                <partial name="~/Views/Home/_ViewLiabilities.cshtml" model="@Model" />
+            </div>
         }
 
         else
@@ -22,5 +28,4 @@
             <p style="margin-top: 4rem; color: #0E152D;">You are currently not logged in. <a asp-controller="Home" asp-action="Login">Please log in now</a>.</p>
         }
     }
-
 </div>

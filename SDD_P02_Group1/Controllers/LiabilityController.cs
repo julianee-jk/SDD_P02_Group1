@@ -4,15 +4,23 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using SDD_P02_Group1.DAL;
+using SDD_P02_Group1.Models;
+using Microsoft.AspNetCore.Http;
 
 namespace SDD_P02_Group1.Controllers
 {
     public class LiabilityController : Controller
     {
+        private LiabilityDAL LiabilityContext = new LiabilityDAL();
+        private UserDAL userContext = new UserDAL();
+
         // GET: LiabilityController
         public ActionResult Index()
         {
-            return View();
+            int userid = HttpContext.Session.GetInt32("UserID").Value;
+            List<Liability> liabilityList = LiabilityContext.GetAllLiability(userid);
+            return View(liabilityList);
         }
 
         // GET: LiabilityController/Details/5
@@ -30,11 +38,23 @@ namespace SDD_P02_Group1.Controllers
         // POST: LiabilityController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public ActionResult Create(Liability liability)
         {
             try
             {
-                return RedirectToAction(nameof(Index));
+                if (ModelState.IsValid)
+                {
+
+                    //Add user record to database
+                    LiabilityContext.AddLiability(liability, HttpContext.Session.GetInt32("UserID").Value);
+                    //Redirect user to Home/Login view
+                    return RedirectToAction("Index", "Liability");
+                }
+                else
+                {
+                    //Input validation fails, return to the Create view to display error message
+                    return RedirectToAction("Create", "Liability");
+                }
             }
             catch
             {

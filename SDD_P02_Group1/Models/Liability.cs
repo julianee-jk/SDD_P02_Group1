@@ -17,19 +17,31 @@ namespace SDD_P02_Group1.Models
         [Display(Name = "Liability Name")]
         public string LiabilityName { get; set; }
 
+        [Required]
+        [Display(Name = "Type")]
+        [StringLength(50, ErrorMessage = "Invalid! Type cannot exceed 50 characters")]
+        public string LiabilityType { get; set; }
+
         [Display(Name = "Description")]
         [StringLength(200, ErrorMessage = "Invalid! Description cannot exceed 200 characters")]
-        public string Description { get; set; }
+        public string? LiabilityDesc { get; set; }
 
         [Required]
+        [Display(Name = "Cost")]
+        public decimal Cost { get; set; }
+
         [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:yyyy-MM-dd}")]
         [DataType(DataType.Date)]
         [Display(Name = "Due Date")]
-        public DateTime DueDate { get; set; }
+        public DateTime? DueDate { get; set; }
 
+        [Required]
+        [Display(Name = "Recurring Type")]
+        [StringLength(50, ErrorMessage = "Invalid! Recurring type cannot exceed 50 characters")]
+        public string RecurringType { get; set; }
 
-        [Display(Name = "Amount Due")]
-        public decimal AmountDue { get; set; }
+        [Display(Name = "Recurring Duration")]
+        public int? RecurringDuration { get; set; }
 
         [ForeignKey("UserID")]
         public virtual int UserID { get; set; }

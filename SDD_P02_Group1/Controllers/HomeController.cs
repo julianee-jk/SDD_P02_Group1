@@ -16,6 +16,7 @@ namespace SDD_P02_Group1.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private UserDAL UserContext = new UserDAL();
+        private LiabilityDAL LiabilityContext = new LiabilityDAL();
 
         public HomeController(ILogger<HomeController> logger)
         {
@@ -29,6 +30,31 @@ namespace SDD_P02_Group1.Controllers
                 int userid = HttpContext.Session.GetInt32("UserID").Value;
                 HttpContext.Session.SetString("Username", UserContext.GetDetails(userid).Username);
                 ViewData["userEmail"] = UserContext.GetDetails(userid).EmailAddr;
+
+                List<Liability> liabilityList = LiabilityContext.GetAllLiability(userid);
+
+                string message = "";
+                DateTime today = DateTime.Now;
+                foreach (Liability l in liabilityList)
+                {
+                    if (l.DueDate != null && ((Convert.ToDateTime(l.DueDate) - today).TotalDays <= 7) && (Convert.ToDateTime(l.DueDate) - today).TotalDays >= 0)
+                    {
+                        message = message + l.LiabilityName + " (Due Soon)\n";
+                    }
+                    else if (l.DueDate != null && ((Convert.ToDateTime(l.DueDate) - today).TotalDays< 0))
+                    {
+                        message = message + l.LiabilityName + " (Overdue)\n";
+                    }
+                }
+
+                if (message != "" && HttpContext.Session.GetString("LiabilityEmail") != "Sent")
+                {
+                    message += "\n\n For more information, please log into your Moolah account.";
+                    SendEmail("Liabilities Notice", message, UserContext.GetDetails(userid).EmailAddr);
+                    HttpContext.Session.SetString("LiabilityEmail", "Sent");
+                }
+
+                return View(liabilityList);
             }
             return View();
         }
@@ -77,7 +103,6 @@ namespace SDD_P02_Group1.Controllers
         {
             string email = formData["passwordResetEmail"].ToString();
             bool emailExists = UserContext.IsEmailExist2(email);
-            Console.WriteLine(emailExists);
 
             if (emailExists == false)
             {
