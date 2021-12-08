@@ -1,0 +1,128 @@
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using SDD_P02_Group1.DAL;
+using SDD_P02_Group1.Models;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc.Rendering;
+
+namespace SDD_P02_Group1.Controllers
+{
+    public class UserCardController : Controller
+    {
+        private UserCardDAL UserCardContext = new UserCardDAL();
+        private UserDAL userContext = new UserDAL();
+
+        // GET: LiabilityController
+        public ActionResult Index()
+        {
+            int userid = HttpContext.Session.GetInt32("UserID").Value;
+            List<UserCard> userCardList = UserCardContext.GetAllUserCard(userid);
+            return View(userCardList);
+        }
+
+        // GET: LiabilityController/Details/5
+        public ActionResult Details(int id)
+        {
+            return View();
+        }
+
+        // GET: LiabilityController/Create
+        public ActionResult Create()
+        {
+            ViewData["CardType"] = GetCardTypes();
+            return View();
+        }
+
+        // POST: LiabilityController/Create
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Create(UserCard usercard)
+        {
+            try
+            {
+                ViewData["CardType"] = GetCardTypes();
+                if (ModelState.IsValid)
+                {
+
+                    //Add user record to database
+                    UserCardContext.AddUserCard(usercard, HttpContext.Session.GetInt32("UserID").Value);
+                    //Redirect user to UserCard/Index view
+                    return RedirectToAction("Index", "UserCard");
+                }
+                else
+                {
+                    //Input validation fails, return to the Create view to display error message
+                    return RedirectToAction("Create", "UserCard");
+                }
+            }
+            catch
+            {
+                ViewData["CardType"] = GetCardTypes();
+                return View();
+            }
+        }
+
+        // GET: LiabilityController/Edit/5
+        public ActionResult Edit(int id)
+        {
+            return View();
+        }
+
+        // POST: LiabilityController/Edit/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Edit(int id, IFormCollection collection)
+        {
+            try
+            {
+                return RedirectToAction(nameof(Index));
+            }
+            catch
+            {
+                return View();
+            }
+        }
+
+        // GET: LiabilityController/Delete/5
+        public ActionResult Delete(int id)
+        {
+            return View();
+        }
+
+        // POST: LiabilityController/Delete/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Delete(int id, IFormCollection collection)
+        {
+            try
+            {
+                return RedirectToAction(nameof(Index));
+            }
+            catch
+            {
+                return View();
+            }
+        }
+
+        // Get all card types list
+        private List<SelectListItem> GetCardTypes()
+        {
+            List<SelectListItem> cardTypes = new List<SelectListItem>();
+            cardTypes.Add(new SelectListItem
+            {
+                Value = "Credit",
+                Text = "Credit"
+            });
+            cardTypes.Add(new SelectListItem
+            {
+                Value = "Debit",
+                Text = "Debit"
+            });
+            return cardTypes;
+        }
+    }
+}
