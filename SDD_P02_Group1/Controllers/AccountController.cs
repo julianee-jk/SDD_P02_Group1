@@ -30,22 +30,16 @@ namespace SDD_P02_Group1.Controllers
         // GET: AccountController/Edit/5
         public ActionResult Edit()
         {
-            EditUserViewModel ev = new EditUserViewModel();
             int userid = HttpContext.Session.GetInt32("UserID").Value;
             User user = UserContext.GetDetails(userid);
 
-            ev.UserId = userid;
-            ev.Username = user.Username;
-            ev.Password = user.Password;
-            ev.EmailAddr = user.EmailAddr;
-
-            return View(ev);
+            return View(user);
         }
 
         // POST: AccountController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(EditUserViewModel user)
+        public ActionResult Edit(User user)
         {
             if (ModelState.IsValid)
             {
