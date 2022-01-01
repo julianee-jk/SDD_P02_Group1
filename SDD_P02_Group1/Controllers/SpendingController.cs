@@ -6,26 +6,22 @@ using System.Linq;
 using System.Threading.Tasks;
 using SDD_P02_Group1.DAL;
 using SDD_P02_Group1.Models;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace SDD_P02_Group1.Controllers
 {
     public class SpendingController : Controller
     {
-        private UserCardDAL UserCardContext = new UserCardDAL();
         private UserDAL userContext = new UserDAL();
+        private SpendingDAL SpendingContext = new SpendingDAL();
 
-        // GET: LiabilityController
+        // GET: SpendingController
         public ActionResult Index()
         {
-            return View();
+            int userid = HttpContext.Session.GetInt32("UserID").Value;
+            List<Spending> spendingList = SpendingContext.GetAllSpending(userid);
+            return View(spendingList);
         }
 
-        // GET: LiabilityController/Details/5
-        public ActionResult Details(int id)
-        {
-            return View();
-        }
     }
 }
