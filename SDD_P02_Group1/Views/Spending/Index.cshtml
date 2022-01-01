@@ -1,12 +1,101 @@
-﻿@model IEnumerable<SDD_P02_Group1.Models.Spending>
+﻿@model SDD_P02_Group1.Models.SpendingViewModel
 
 @{
     ViewData["Title"] = "View Spending";
 }
 
-<h4>Spending Records By Week</h4>
+<h4>Spendings for current week</h4>
 
-@if (Model.ToList().Count > 0)
+<div class="table-responsive">
+    <table id="ViewSpending" class="table table-striped">
+        <thead>
+            <tr>
+                <th>First Date Of Week</th>
+                <th>Monday Spending</th>
+                <th>Tuesday Spending</th>
+                <th>Wednesday Spending</th>
+                <th>Thursday Spending</th>
+                <th>Friday Spending</th>
+                <th>Saturday Spending</th>
+                <th>Sunday Spending</th>
+                <th>Total Spending</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>@Model.current.FirstDateOfWeek.ToString("dd MMM yyyy")</td>
+                @if (Model.current.MonSpending is null)
+                {
+                    <td>No Record</td>
+                }
+                else
+                {
+                    <td>@String.Format("{0}{1:n2}", "$", Model.current.MonSpending)</td>
+                }
+                @if (Model.current.TueSpending is null)
+                {
+                    <td>No Record</td>
+                }
+                else
+                {
+                    <td>@String.Format("{0}{1:n2}", "$", Model.current.TueSpending)</td>
+                }
+                @if (Model.current.WedSpending is null)
+                {
+                    <td>No Record</td>
+                }
+                else
+                {
+                    <td>@String.Format("{0}{1:n2}", "$", Model.current.WedSpending)</td>
+                }
+                @if (Model.current.ThuSpending is null)
+                {
+                    <td>No Record</td>
+                }
+                else
+                {
+                    <td>@String.Format("{0}{1:n2}", "$", Model.current.ThuSpending)</td>
+                }
+                @if (Model.current.FriSpending is null)
+                {
+                    <td>No Record</td>
+                }
+                else
+                {
+                    <td>@String.Format("{0}{1:n2}", "$", Model.current.FriSpending)</td>
+                }
+                @if (Model.current.SatSpending is null)
+                {
+                    <td>No Record</td>
+                }
+                else
+                {
+                    <td>@String.Format("{0}{1:n2}", "$", Model.current.SatSpending)</td>
+                }
+                @if (Model.current.SunSpending is null)
+                {
+                    <td>No Record</td>
+                }
+                else
+                {
+                    <td>@String.Format("{0}{1:n2}", "$", Model.current.SunSpending)</td>
+                }
+                @if (Model.current.TotalSpending is null)
+                {
+                    <td>No Record</td>
+                }
+                else
+                {
+                    <td>@String.Format("{0}{1:n2}", "$", Model.current.TotalSpending)</td>
+                }
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<h4>Past Spending Records by Week</h4>
+
+@if (Model.past.Count > 0)
 {
     <div class="table-responsive">
         <table id="ViewSpending" class="table table-striped">
@@ -24,19 +113,22 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach (var item in Model)
+                @foreach (var item in Model.past)
                 {
-                    <tr>
-                        <td>@item.FirstDateOfWeek.ToString("dd MMM yyyy")</td>
-                        <td>@String.Format("{0}{1:n2}","$",item.MonSpending)</td>
-                        <td>@String.Format("{0}{1:n2}","$",item.TueSpending)</td>
-                        <td>@String.Format("{0}{1:n2}","$",item.WedSpending)</td>
-                        <td>@String.Format("{0}{1:n2}","$",item.ThuSpending)</td>
-                        <td>@String.Format("{0}{1:n2}","$",item.FriSpending)</td>
-                        <td>@String.Format("{0}{1:n2}","$",item.SatSpending)</td>
-                        <td>@String.Format("{0}{1:n2}","$",item.SunSpending)</td>
-                        <td>@String.Format("{0}{1:n2}","$",item.TotalSpending)</td>
-                    </tr>
+                    if (item.FirstDateOfWeek != Model.current.FirstDateOfWeek)
+                    {
+                        <tr>
+                            <td>@item.FirstDateOfWeek.ToString("dd MMM yyyy")</td>
+                            <td>@String.Format("{0}{1:n2}", "$", item.MonSpending)</td>
+                            <td>@String.Format("{0}{1:n2}", "$", item.TueSpending)</td>
+                            <td>@String.Format("{0}{1:n2}", "$", item.WedSpending)</td>
+                            <td>@String.Format("{0}{1:n2}", "$", item.ThuSpending)</td>
+                            <td>@String.Format("{0}{1:n2}", "$", item.FriSpending)</td>
+                            <td>@String.Format("{0}{1:n2}", "$", item.SatSpending)</td>
+                            <td>@String.Format("{0}{1:n2}", "$", item.SunSpending)</td>
+                            <td>@String.Format("{0}{1:n2}", "$", item.TotalSpending)</td>
+                        </tr>
+                    }
                 }
             </tbody>
         </table>

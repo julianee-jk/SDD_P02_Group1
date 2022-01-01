@@ -19,9 +19,28 @@ namespace SDD_P02_Group1.Controllers
         public ActionResult Index()
         {
             int userid = HttpContext.Session.GetInt32("UserID").Value;
+            DateTime today = DateTime.Today;
+            while (today.DayOfWeek.ToString() != "Monday")
+            {
+                today = today.AddDays(-1);
+                Console.WriteLine(today);
+            }
+            
+            if (!SpendingContext.IsSpendingExist(userid, today))
+            {
+                SpendingContext.AddDefaultSpending(userid, today);
+            }
+
+            Spending currentWeek = SpendingContext.GetSpendingByDate(userid, today);
             List<Spending> spendingList = SpendingContext.GetAllSpending(userid);
-            return View(spendingList);
+
+            SpendingViewModel sv = new SpendingViewModel();
+            sv.current = currentWeek;
+            sv.past = spendingList;
+            return View(sv);
         }
+
+
 
     }
 }
