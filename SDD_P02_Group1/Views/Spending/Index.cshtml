@@ -1,0 +1,44 @@
+﻿@model IEnumerable<SDD_P02_Group1.Models.Spending>
+
+@{
+    ViewData["Title"] = "View Spending";
+}
+
+<h4>Spending Records By Week</h4>
+
+@if (Model.ToList().Count > 0)
+{
+    <div class="table-responsive">
+        <table id="ViewSpending" class="table table-striped">
+            <thead>
+                <tr>
+                    <th>First Date Of Week</th>
+                    <th>Monday Spending</th>
+                    <th>Tuesday Spending</th>
+                    <th>Wednesday Spending</th>
+                    <th>Thursday Spending</th>
+                    <th>Friday Spending</th>
+                    <th>Saturday Spending</th>
+                    <th>Sunday Spending</th>
+                    <th>Total Spending</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@item.FirstDateOfWeek.ToString("dd MMM yyyy")</td>
+                        <td>@String.Format("{0}{1:n2}","$",item.MonSpending)</td>
+                        <td>@String.Format("{0}{1:n2}","$",item.TueSpending)</td>
+                        <td>@String.Format("{0}{1:n2}","$",item.WedSpending)</td>
+                        <td>@String.Format("{0}{1:n2}","$",item.ThuSpending)</td>
+                        <td>@String.Format("{0}{1:n2}","$",item.FriSpending)</td>
+                        <td>@String.Format("{0}{1:n2}","$",item.SatSpending)</td>
+                        <td>@String.Format("{0}{1:n2}","$",item.SunSpending)</td>
+                        <td>@String.Format("{0}{1:n2}","$",item.TotalSpending)</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
