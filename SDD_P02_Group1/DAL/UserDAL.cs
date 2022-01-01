@@ -6,7 +6,6 @@ using Microsoft.Extensions.Configuration;
 using System.IO;
 using System.Data.SqlClient;
 using SDD_P02_Group1.Models;
-using SDD_P02_Group1.ViewModels;
 
 namespace SDD_P02_Group1.DAL
 {
