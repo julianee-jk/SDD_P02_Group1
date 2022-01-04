@@ -31,12 +31,33 @@ namespace SDD_P02_Group1.Controllers
                 SpendingContext.AddDefaultSpending(userid, today);
             }
 
+            DateTime previousMonday = today.AddDays(-7);
+
+            if (!SpendingContext.IsSpendingExist(userid, previousMonday))
+            {
+                SpendingContext.AddDefaultSpending(userid, previousMonday);
+            }
+
             Spending currentWeek = SpendingContext.GetSpendingByDate(userid, today);
+            Spending previousWeek = SpendingContext.GetSpendingByDate(userid, previousMonday);
             List<Spending> spendingList = SpendingContext.GetAllSpending(userid);
+
+            WeeklySpendingDifference wsd = new WeeklySpendingDifference();
+            wsd.MonSpendingDifference = (currentWeek.MonSpending - previousWeek.MonSpending);
+            wsd.TueSpendingDifference = (currentWeek.TueSpending - previousWeek.TueSpending);
+            wsd.WedSpendingDifference = (currentWeek.WedSpending - previousWeek.WedSpending);
+            wsd.ThuSpendingDifference = (currentWeek.ThuSpending - previousWeek.ThuSpending);
+            wsd.FriSpendingDifference = (currentWeek.FriSpending - previousWeek.FriSpending);
+            wsd.SatSpendingDifference = (currentWeek.SatSpending - previousWeek.SatSpending);
+            wsd.SunSpendingDifference = (currentWeek.SunSpending - previousWeek.SunSpending);
+            wsd.TotalSpendingDifference = (currentWeek.TotalSpending - previousWeek.TotalSpending);
+            wsd.TotalSpendingDifferencePercentage = ((currentWeek.TotalSpending - previousWeek.TotalSpending) / previousWeek.TotalSpending) * 100;
 
             SpendingViewModel sv = new SpendingViewModel();
             sv.current = currentWeek;
             sv.past = spendingList;
+            sv.weekdiff = wsd;
+
             return View(sv);
         }
 
