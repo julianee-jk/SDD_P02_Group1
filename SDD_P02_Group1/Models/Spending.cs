@@ -18,7 +18,6 @@ namespace SDD_P02_Group1.Models
         public DateTime FirstDateOfWeek { get; set; }
 
         [Required]
-
         [Display(Name = "MonSpending")]
         public decimal? MonSpending { get; set; }
 
