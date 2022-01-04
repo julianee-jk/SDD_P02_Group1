@@ -12,5 +12,6 @@ namespace SDD_P02_Group1.Models
     {
         public Spending current { get; set; }
         public List<Spending> past { get; set; }
+        public WeeklySpendingDifference weekdiff { get; set; }
     }
 }
