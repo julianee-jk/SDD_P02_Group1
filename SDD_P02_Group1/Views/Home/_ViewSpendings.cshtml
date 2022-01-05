@@ -1,0 +1,88 @@
+﻿@model SDD_P02_Group1.Models.Spending
+
+<div>
+    <table id="ViewSpending" class="table table-striped">
+        <thead>
+            <tr>
+                <th>First Date Of Week</th>
+                <th>Monday Spending</th>
+                <th>Tuesday Spending</th>
+                <th>Wednesday Spending</th>
+                <th>Thursday Spending</th>
+                <th>Friday Spending</th>
+                <th>Saturday Spending</th>
+                <th>Sunday Spending</th>
+                <th>Total Spending</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>@Model.FirstDateOfWeek.ToString("dd MMM yyyy")</td>
+                @if (Model.MonSpending is null)
+                {
+                    <td>No Record</td>
+                }
+                else
+                {
+                    <td>@String.Format("{0}{1:n2}", "$", Model.MonSpending)</td>
+                }
+                @if (Model.TueSpending is null)
+                {
+                    <td>No Record</td>
+                }
+                else
+                {
+                    <td>@String.Format("{0}{1:n2}", "$", Model.TueSpending)</td>
+                }
+                @if (Model.WedSpending is null)
+                {
+                    <td>No Record</td>
+                }
+                else
+                {
+                    <td>@String.Format("{0}{1:n2}", "$", Model.WedSpending)</td>
+                }
+                @if (Model.ThuSpending is null)
+                {
+                    <td>No Record</td>
+                }
+                else
+                {
+                    <td>@String.Format("{0}{1:n2}", "$", Model.ThuSpending)</td>
+                }
+                @if (Model.FriSpending is null)
+                {
+                    <td>No Record</td>
+                }
+                else
+                {
+                    <td>@String.Format("{0}{1:n2}", "$", Model.FriSpending)</td>
+                }
+                @if (Model.SatSpending is null)
+                {
+                    <td>No Record</td>
+                }
+                else
+                {
+                    <td>@String.Format("{0}{1:n2}", "$", Model.SatSpending)</td>
+                }
+                @if (Model.SunSpending is null)
+                {
+                    <td>No Record</td>
+                }
+                else
+                {
+                    <td>@String.Format("{0}{1:n2}", "$", Model.SunSpending)</td>
+                }
+                @if (Model.TotalSpending is null)
+                {
+                    <td>No Record</td>
+                }
+                else
+                {
+                    <td>@String.Format("{0}{1:n2}", "$", Model.TotalSpending)</td>
+                }
+            </tr>
+        </tbody>
+    </table>
+</div>

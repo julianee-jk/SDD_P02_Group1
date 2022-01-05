@@ -1,4 +1,4 @@
-﻿@model IEnumerable<SDD_P02_Group1.Models.Liability>
+﻿@model SDD_P02_Group1.ViewModels.OverviewViewModel
 
 @{
     ViewData["Title"] = "Home";
@@ -18,8 +18,15 @@
             userRole = Context.Session.GetString("Role");
             <p style="color: #0E152D;">You are logged in as a <span style="color: #a629c2 ">@userRole</span></p>
 
+            <h3>Current Week Spendings</h3>
             <div class="text-center">
-                <partial name="~/Views/Home/_ViewLiabilities.cshtml" model="@Model" />
+                <partial name="~/Views/Home/_ViewSpendings.cshtml" model="@Model.sp" />
+            </div>
+            <br /><br />
+
+            <h3>Liabilities</h3>
+            <div class="text-center">
+                <partial name="~/Views/Home/_ViewLiabilities.cshtml" model="@Model.lb" />
             </div>
         }
 
