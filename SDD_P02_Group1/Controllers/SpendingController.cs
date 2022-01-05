@@ -54,15 +54,17 @@ namespace SDD_P02_Group1.Controllers
             wsd.TotalSpendingDifference = (currentWeek.TotalSpending - previousWeek.TotalSpending);
             wsd.TotalSpendingDifferencePercentage = ((currentWeek.TotalSpending - previousWeek.TotalSpending) / previousWeek.TotalSpending) * 100;
 
+            List<SpendingRecord> recordList = SpendingContext.GetAllSpendingRecord(userid);
+
+
+
             SpendingViewModel sv = new SpendingViewModel();
             sv.current = currentWeek;
             sv.past = spendingList;
             sv.weekdiff = wsd;
+            sv.spendrecord = recordList;
 
             return View(sv);
         }
-
-
-
     }
 }

@@ -194,5 +194,42 @@ namespace SDD_P02_Group1.DAL
             conn.Close();
             return count;
         }
+
+        public List<SpendingRecord> GetAllSpendingRecord(int userid)
+        {
+            List<SpendingRecord> recordList = new List<SpendingRecord>();
+            //Create a SqlCommand object from connection object
+            SqlCommand cmd = conn.CreateCommand();
+
+            cmd.CommandText = @"SELECT * FROM UserSpendingRecord WHERE UserID = @id";
+            cmd.Parameters.AddWithValue("@id", userid);
+
+            //Open a database connection
+            conn.Open();
+            //Execute SELCT SQL through a DataReader
+            SqlDataReader reader = cmd.ExecuteReader();
+
+            if (reader.HasRows)
+            {
+                while (reader.Read())
+                {
+                    recordList.Add(
+                    new SpendingRecord
+                    {
+                        RecordID = reader.GetInt32(0),
+                        DateOfTransaction = reader.GetDateTime(1),
+                        CategoryOfSpending = reader.GetString(2),
+                        AmountSpent = reader.GetDecimal(3),
+                        UserID = userid,
+                    }
+                    );
+                }
+            }
+            //Close data reader
+            reader.Close();
+            //Close database connection
+            conn.Close();
+            return recordList;
+        }
     }
 }
