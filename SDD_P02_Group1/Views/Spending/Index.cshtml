@@ -190,6 +190,31 @@
 </table>
 <br />
 
+<h4>Spendings By Category</h4>
+
+<div class="table-responsive">
+    <table id="ViewSpending" class="table table-striped">
+        <thead>
+            <tr>
+                <th>Date of Transaction</th>
+                <th>Category of Spending</th>
+                <th>Amount Spent</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.spendrecord)
+            {
+                <tr>
+                    <td>@item.DateOfTransaction.ToString("dd MMM yyyy")</td>
+                    <td>@item.CategoryOfSpending</td>
+                    <td>@String.Format("{0}{1:n2}", "$", item.AmountSpent)</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+<br />
+
 <h4>Past Spending Records by Week</h4>
 
 @if (Model.past.Count > 0)
