@@ -126,5 +126,6 @@ namespace SDD_P02_Group1.DAL
             conn.Close();
             return userCardList;
         }
+
     }
 }
