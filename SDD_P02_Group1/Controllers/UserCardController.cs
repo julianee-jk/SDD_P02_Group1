@@ -8,6 +8,7 @@ using SDD_P02_Group1.DAL;
 using SDD_P02_Group1.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using SDD_P02_Group1.ViewModels;
 
 namespace SDD_P02_Group1.Controllers
 {
@@ -24,10 +25,19 @@ namespace SDD_P02_Group1.Controllers
             return View(userCardList);
         }
 
-        // GET: LiabilityController/Details/5
-        public ActionResult Details(int id)
+        //GET: LiabilityController/Details/5
+        public ActionResult Details(int? cardid, int? userid)
         {
-            return View();
+
+            UserCard usercard = userContext.GetUserCardDetails(userid.Value, cardid.Value);
+            UserCardSpending userCardSpending = userContext.GetUserCardSpendingsDetails(userid.Value);
+
+            UserCardSpendingViewModel userCardSpendingVM = new UserCardSpendingViewModel();
+
+            userCardSpendingVM.userCard = usercard;
+            userCardSpendingVM.userCardSpending = userCardSpending;
+
+            return View(userCardSpendingVM);
         }
 
         // GET: LiabilityController/Create
