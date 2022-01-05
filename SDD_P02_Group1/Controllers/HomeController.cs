@@ -8,6 +8,7 @@ using System.Net.Mail;
 using System.Threading.Tasks;
 using SDD_P02_Group1.DAL;
 using SDD_P02_Group1.Models;
+using SDD_P02_Group1.ViewModels;
 using Microsoft.AspNetCore.Http;
 
 namespace SDD_P02_Group1.Controllers
@@ -17,6 +18,7 @@ namespace SDD_P02_Group1.Controllers
         private readonly ILogger<HomeController> _logger;
         private UserDAL UserContext = new UserDAL();
         private LiabilityDAL LiabilityContext = new LiabilityDAL();
+        private SpendingDAL SpendingContext = new SpendingDAL();
 
         public HomeController(ILogger<HomeController> logger)
         {
@@ -54,7 +56,25 @@ namespace SDD_P02_Group1.Controllers
                     HttpContext.Session.SetString("LiabilityEmail", "Sent");
                 }
 
-                return View(liabilityList);
+                DateTime currentMonday = DateTime.Today;
+                while (currentMonday.DayOfWeek.ToString() != "Monday")
+                {
+                    currentMonday = currentMonday.AddDays(-1);
+                    Console.WriteLine(currentMonday);
+                }
+
+                if (!SpendingContext.IsSpendingExist(userid, currentMonday))
+                {
+                    SpendingContext.AddDefaultSpending(userid, currentMonday);
+                }
+
+                Spending currentWeek = SpendingContext.GetSpendingByDate(userid, currentMonday);
+
+                OverviewViewModel sv = new OverviewViewModel();
+                sv.lb = liabilityList;
+                sv.sp = currentWeek;
+
+                return View(sv);
             }
             return View();
         }
