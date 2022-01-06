@@ -62,7 +62,69 @@ namespace SDD_P02_Group1.DAL
             return asset.AssetID;
         }
 
+        public void AddChanges(int userID, Asset asset, string AssetDescN, string AssetTypeN, decimal CurrentValueN)
+        {
+            //Create a SqlCommand object from connection object
+            SqlCommand cmd = conn.CreateCommand();
 
+            cmd.CommandText = @"
+                DECLARE @Time AS VARCHAR(100) = GETDATE();  
+                INSERT INTO 
+                    UserAsset 
+                        (UserID, AssetID, Timestamp, 
+                        AssetTypeOld, AssetTypeNew, 
+                        AssetDescOld, AssetDescNew,     
+                        CurrentValueOld, CurrentValueNew)
+                    OUTPUT INSERTED.AssetID VALUES 
+                        (@userid, @assetid, @Time, 
+                        @assettype, @assettypen, 
+                        @assetdesc, @assetdescn, 
+                        @current, @currentn)";
+
+            //A connection to database must be opened before any operations made.
+            conn.Open();
+
+            cmd.Parameters.AddWithValue("@userid", userID);
+
+            cmd.Parameters.AddWithValue("@assetid", asset.AssetID);
+
+            if (asset.AssetType == AssetTypeN)
+            {
+                cmd.Parameters.AddWithValue("@assettype", null);
+                cmd.Parameters.AddWithValue("@assettypen", null);
+            }
+            else
+            {
+                cmd.Parameters.AddWithValue("@assettype", asset.AssetType);
+                cmd.Parameters.AddWithValue("@assettypen", AssetTypeN);
+            }
+
+            if (asset.AssetDesc == AssetDescN)
+            {
+                cmd.Parameters.AddWithValue("@assetdesc", null);
+                cmd.Parameters.AddWithValue("@assetdescn", null);
+            }
+            else
+            {
+                cmd.Parameters.AddWithValue("@assetdesc", asset.AssetDesc);
+                cmd.Parameters.AddWithValue("@assetdescn", AssetDescN);
+            }
+
+            if (asset.CurrentValue == Convert.ToDecimal(CurrentValueN))
+            {
+                cmd.Parameters.AddWithValue("@current", null);
+                cmd.Parameters.AddWithValue("@currentn", null);
+            }
+            else
+            {
+                cmd.Parameters.AddWithValue("@current", asset.CurrentValue);
+                cmd.Parameters.AddWithValue("@currentn", CurrentValueN);
+            }
+
+            SqlDataReader reader = cmd.ExecuteReader();
+
+            conn.Close();
+        }
 
         public Asset GetAssetDetails(int assetID)
         {

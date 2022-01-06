@@ -92,6 +92,23 @@ CREATE TABLE dbo.UserWeeklySpending
 )
 GO
 
+CREATE TABLE dbo.AssetChanges
+(
+	UserID				int				NOT NULL,
+	AssetID				int				NOT NULL,
+	Timestamp			VARCHAR(100)	NOT NULL,
+	AssetTypeOld		varchar(50)		NULL,
+	AssetTypeNew		varchar(50)		NULL,
+	AssetDescOld		varchar(200)	NULL,
+	AssetDescNew		varchar(200)	NULL,
+	CurrentValueOld		money			NULL,
+	CurrentValueNew		money			NULL,
+
+	CONSTRAINT PK_AssetChanges PRIMARY KEY NONCLUSTERED (UserID, AssetID, Timestamp),
+
+)
+GO
+
 
 /*** Dummy Values ***/
 
@@ -113,3 +130,6 @@ INSERT INTO UserLiability VALUES ('Insurance Policies','Bills','Yearly subscript
 INSERT INTO UserLiability VALUES ('Phone Bill','Bills','Phone plan charged by phone company',60,'2021-12-31','Monthly',NULL,2)
 INSERT INTO UserLiability VALUES ('64 inch TV Installment','Purchase','24 months installment plan for television',52,'2021-12-31','Monthly',24,2)
 INSERT INTO UserLiability VALUES ('Housing Payments','Purchase','2 years till payments are fully paid',370,'2021-12-31','Yearly',2,2)
+
+SELECT * FROM AssetChanges
+

@@ -6,21 +6,21 @@
 
 <div>
     <div class="col-md-4">
-        <form asp-action="Edit">
+        <form method="post" action="~/Asset/SaveChanges">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="AssetName" class="control-label"></label><br />
-                <input asp-for="AssetName" readonly class="form-control-plaintext" id="change1" required />
+                <input asp-for="AssetName" readonly class="form-control-plaintext" id="change1"  required />
                 <span asp-validation-for="AssetName" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="AssetDesc" class="control-label"></label><br />
-                <input asp-for="AssetDesc" readonly class="form-control-plaintext" id="change2" required />
+                <input asp-for="AssetDesc" readonly class="form-control-plaintext" id="change2" name="change2" required />
                 <span asp-validation-for="AssetDesc" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="AssetType" class="control-label"></label><br />
-                <input asp-for="AssetType" readonly class="form-control-plaintext" id="change3" required />
+                <input asp-for="AssetType" readonly class="form-control-plaintext" id="change3" name="change3" required />
                 <span asp-validation-for="AssetType" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -30,7 +30,7 @@
             </div>
             <div class="form-group">
                 <label asp-for="CurrentValue" class="control-label"></label>
-                <input asp-for="CurrentValue" readonly class="form-control-plaintext" id="change5" required />
+                <input asp-for="CurrentValue" readonly class="form-control-plaintext" id="change5" name="change5" required />
                 <span asp-validation-for="CurrentValue" class="text-danger"></span>
             </div>
             <div class="form-group">
