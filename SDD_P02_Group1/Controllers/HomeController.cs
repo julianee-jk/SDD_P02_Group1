@@ -179,8 +179,8 @@ namespace SDD_P02_Group1.Controllers
 
         public ActionResult CreateExcel(string uid, IFormCollection formData)
         {
-            string filepath = "Weekly Spendings.xlsx";
             int userid = HttpContext.Session.GetInt32("UserID").Value;
+            string filepath = "Weekly Spendings - " + userid.ToString() + ".xlsx";
             ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
             using (ExcelPackage excel = new ExcelPackage())
             {
@@ -196,29 +196,24 @@ namespace SDD_P02_Group1.Controllers
                   {
                     new string[] {"Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"}
                   };
-                var rowData = new List<string[]>()
-                  {
-                    new string[] {}
-                  };
 
                 // Get the header range
                 string Range = "A1:" + Char.ConvertFromUtf32(headerRow[0].Length + 64) + "1";
-                string Range2 = "A2:" + Char.ConvertFromUtf32(rowData[0].Length + 64) + "1";
 
                 // get the workSheet in which you want to create header
                 var worksheet = excel.Workbook.Worksheets["Weekly Spendings"];
 
                 // Popular header row data
                 worksheet.Cells[Range].LoadFromArrays(headerRow);
-                worksheet.Cells[Range2].LoadFromArrays(rowData);
 
                 //Save Excel file
                 excel.SaveAs(excelFile);
             }
-            byte[] fileBytes = System.IO.File.ReadAllBytes(filepath);
+            //byte[] fileBytes = System.IO.File.ReadAllBytes(filepath);
             string fileName = "Weekly Spendings - " + userid.ToString() + ".xlsx";
 
-            return File(fileBytes, System.Net.Mime.MediaTypeNames.Application.Octet, fileName);
+            return RedirectToAction("Index");
+            //return File(fileBytes, System.Net.Mime.MediaTypeNames.Application.Octet, fileName);
         }
 
         public ActionResult AccountLogin(IFormCollection formData)
