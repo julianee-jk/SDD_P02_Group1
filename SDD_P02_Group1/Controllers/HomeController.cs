@@ -194,26 +194,39 @@ namespace SDD_P02_Group1.Controllers
                 //Add header row columns name in string list array
                 var headerRow = new List<string[]>()
                   {
-                    new string[] {"Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"}
+                    new string[] { "First Date Of Week", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday", "Total Spending" }
                   };
 
+               
                 // Get the header range
                 string Range = "A1:" + Char.ConvertFromUtf32(headerRow[0].Length + 64) + "1";
 
                 // get the workSheet in which you want to create header
                 var worksheet = excel.Workbook.Worksheets["Weekly Spendings"];
 
-                // Popular header row data
+                // Populate & style header row data
+                worksheet.Cells[Range].Style.Font.Bold = true;
                 worksheet.Cells[Range].LoadFromArrays(headerRow);
+
+                //Add data into list
+                var Data = new List<object[]>()
+                    {
+                      new object[] {"Test","test@gmail.com"},
+                      new object[] {"Test2","test2@gmail.com"},
+                      new object[] {"Test3","test3@gmail.com"},
+
+                    };
+                //2 is rowNumber 1 is column number
+                worksheet.Cells[2, 1].LoadFromArrays(Data);
 
                 //Save Excel file
                 excel.SaveAs(excelFile);
             }
-            //byte[] fileBytes = System.IO.File.ReadAllBytes(filepath);
+            byte[] fileBytes = System.IO.File.ReadAllBytes(filepath);
             string fileName = "Weekly Spendings - " + userid.ToString() + ".xlsx";
 
-            return RedirectToAction("Index");
-            //return File(fileBytes, System.Net.Mime.MediaTypeNames.Application.Octet, fileName);
+            //return RedirectToAction("Index");
+            return File(fileBytes, System.Net.Mime.MediaTypeNames.Application.Octet, fileName);
         }
 
         public ActionResult AccountLogin(IFormCollection formData)
