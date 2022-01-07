@@ -45,7 +45,7 @@ namespace SDD_P02_Group1.Controllers
                     {
                         message = message + l.LiabilityName + " (Due Soon)\n";
                     }
-                    else if (l.DueDate != null && ((Convert.ToDateTime(l.DueDate) - today).TotalDays< 0))
+                    else if (l.DueDate != null && ((Convert.ToDateTime(l.DueDate) - today).TotalDays < 0))
                     {
                         message = message + l.LiabilityName + " (Overdue)\n";
                     }
@@ -75,9 +75,9 @@ namespace SDD_P02_Group1.Controllers
                 OverviewViewModel sv = new OverviewViewModel();
                 sv.lb = liabilityList;
                 sv.sp = currentWeek;
-
+                
                 return View(sv);
-            }
+            }      
             return View();
         }
 
@@ -209,13 +209,25 @@ namespace SDD_P02_Group1.Controllers
                 worksheet.Cells[Range].LoadFromArrays(headerRow);
 
                 //Add data into list
+                DateTime currentMonday = DateTime.Today;
+                while (currentMonday.DayOfWeek.ToString() != "Monday")
+                {
+                    currentMonday = currentMonday.AddDays(-1);
+                    Console.WriteLine("lolololololol" + currentMonday);
+                }
+                Spending currweek = SpendingContext.GetSpendingByDate(userid, currentMonday);
+
+                var spendingData = new List<string>(){
+                        currweek.FirstDateOfWeek.ToString(), currweek.TueSpending.ToString(), currweek.WedSpending.ToString()
+                        , currweek.ThuSpending.ToString(), currweek.FriSpending.ToString(), currweek.SatSpending.ToString()
+                        , currweek.SunSpending.ToString(), currweek.TotalSpending.ToString()
+                    };
                 var Data = new List<object[]>()
                     {
-                      new object[] {"Test","test@gmail.com"},
-                      new object[] {"Test2","test2@gmail.com"},
-                      new object[] {"Test3","test3@gmail.com"},
-
+                      new object[] { spendingData },
+                      new object[] { "User ID:" + userid },
                     };
+
                 //2 is rowNumber 1 is column number
                 worksheet.Cells[2, 1].LoadFromArrays(Data);
 
