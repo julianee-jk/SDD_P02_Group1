@@ -12,6 +12,7 @@ using SDD_P02_Group1.ViewModels;
 using Microsoft.AspNetCore.Http;
 using OfficeOpenXml;
 using System.IO;
+using OfficeOpenXml.DataValidation;
 
 namespace SDD_P02_Group1.Controllers
 {
@@ -207,6 +208,25 @@ namespace SDD_P02_Group1.Controllers
                 // Populate & style header row data
                 worksheet.Cells[Range].Style.Font.Bold = true;
                 worksheet.Cells[Range].LoadFromArrays(headerRow);
+
+                //set validation for input boxes
+                var decimalValidation = worksheet.DataValidations.AddDecimalValidation("B2:I2");
+                decimalValidation.ShowErrorMessage = true;
+                decimalValidation.ErrorStyle = ExcelDataValidationWarningStyle.stop;
+                decimalValidation.ErrorTitle = "The value you entered is not valid";
+                decimalValidation.Error = "This cell must be a valid positive number.";
+                decimalValidation.Operator = ExcelDataValidationOperator.greaterThanOrEqual;
+                decimalValidation.Formula.Value = 0D;
+
+                //lock all cells exept inputs
+                worksheet.Protection.IsProtected = true;
+                worksheet.Cells["B2:H2"].Style.Locked = false;
+
+                //add formula to total spent column
+                worksheet.Cells["I2"].Formula = "=SUM(B2:H2)";
+
+                //auto size all columns
+                worksheet.Cells["A1:K20"].AutoFitColumns();
 
                 //Add data into list
                 DateTime currentMonday = DateTime.Today;
