@@ -205,7 +205,7 @@ namespace SDD_P02_Group1.DAL
             return SpendingID;
         }
 
-        public int EditSpending(Spending spending, int userID)
+        public int EditSpending(WeeklySpending spending)
         {
             //Create a SqlCommand object from connection object
             SqlCommand cmd = conn.CreateCommand();
@@ -221,7 +221,7 @@ namespace SDD_P02_Group1.DAL
             cmd.Parameters.AddWithValue("@sat", spending.SatSpending);
             cmd.Parameters.AddWithValue("@sun", spending.SunSpending);
             cmd.Parameters.AddWithValue("@total", spending.TotalSpending);
-            cmd.Parameters.AddWithValue("@id", userID);
+            cmd.Parameters.AddWithValue("@id", spending.UserID);
 
             //Open a database connection
             conn.Open();

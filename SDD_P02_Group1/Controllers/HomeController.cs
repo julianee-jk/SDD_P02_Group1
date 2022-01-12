@@ -316,35 +316,44 @@ namespace SDD_P02_Group1.Controllers
             return RedirectToAction("Index");
         }
 
-        public async Task<List<WeeklySpending>> ImportExcel(IFormFile file)
+        public async Task<ActionResult> ImportExcel(IFormFile file)
         {
-            var weeklySpendingList = new List<WeeklySpending>();
-            using (var stream = new MemoryStream())
+            try
             {
-                await file.CopyToAsync(stream);
-                using (var package = new ExcelPackage(stream))
+                var weeklySpendingList = new List<WeeklySpending>();
+                using (var stream = new MemoryStream())
                 {
-                    ExcelWorksheet worksheet = package.Workbook.Worksheets[0];
-                    var rowcount = worksheet.Dimension.Rows;
-                    for (int row = 2; row <= rowcount; row++)
+                    await file.CopyToAsync(stream);
+                    using (var package = new ExcelPackage(stream))
                     {
-                        weeklySpendingList.Add(new WeeklySpending
+                        ExcelWorksheet worksheet = package.Workbook.Worksheets[0];
+                        var rowcount = worksheet.Dimension.Rows;
+                        for (int row = 2; row <= rowcount; row++)
                         {
-                            UserID = Convert.ToInt32(worksheet.Cells[2, 10].Value.ToString().Trim()),
-                            firstDateOfWeek = Convert.ToDateTime(worksheet.Cells[row, 1].Value.ToString().Trim()),
-                            mondaySpending = Convert.ToDecimal(worksheet.Cells[row, 2].Value.ToString().Trim()),
-                            tuesdaySpending = Convert.ToDecimal(worksheet.Cells[row, 3].Value.ToString().Trim()),
-                            wednesdaySpending = Convert.ToDecimal(worksheet.Cells[row, 4].Value.ToString().Trim()),
-                            thursdaySpending = Convert.ToDecimal(worksheet.Cells[row, 5].Value.ToString().Trim()),
-                            fridaySpending = Convert.ToDecimal(worksheet.Cells[row, 6].Value.ToString().Trim()),
-                            saturdaySpending = Convert.ToDecimal(worksheet.Cells[row, 7].Value.ToString().Trim()),
-                            sundaySpending = Convert.ToDecimal(worksheet.Cells[row, 8].Value.ToString().Trim()),
-                            totalSpending = Convert.ToDecimal(worksheet.Cells[row, 9].Value.ToString().Trim()),
-                        });
+                            weeklySpendingList.Add(new WeeklySpending
+                            {
+                                UserID = Convert.ToInt32(worksheet.Cells[2, 10].Value.ToString().Trim()),
+                                FirstDateOfWeek = Convert.ToDateTime(worksheet.Cells[row, 1].Value.ToString().Trim()),
+                                MonSpending = Convert.ToDecimal(worksheet.Cells[row, 2].Value.ToString().Trim()),
+                                TueSpending = Convert.ToDecimal(worksheet.Cells[row, 3].Value.ToString().Trim()),
+                                WedSpending = Convert.ToDecimal(worksheet.Cells[row, 4].Value.ToString().Trim()),
+                                ThuSpending = Convert.ToDecimal(worksheet.Cells[row, 5].Value.ToString().Trim()),
+                                FriSpending = Convert.ToDecimal(worksheet.Cells[row, 6].Value.ToString().Trim()),
+                                SatSpending = Convert.ToDecimal(worksheet.Cells[row, 7].Value.ToString().Trim()),
+                                SunSpending = Convert.ToDecimal(worksheet.Cells[row, 8].Value.ToString().Trim()),
+                                TotalSpending = Convert.ToDecimal(worksheet.Cells[row, 9].Value.ToString().Trim()),
+                            });
+                        }
                     }
                 }
+                SpendingContext.EditSpending(weeklySpendingList.First());
             }
-            return weeklySpendingList;
+            catch (Exception e)
+            {
+                //ViewData["UploadMessage"] = "File upload fail";
+                return RedirectToAction("Index", "Home");
+            }
+            return RedirectToAction("Index", "Home");
         }
     }
 }

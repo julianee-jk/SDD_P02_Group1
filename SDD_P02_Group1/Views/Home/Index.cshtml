@@ -30,7 +30,8 @@
                     <input type="submit" value="Export" class="btn btn-danger m-1" />
                 </form>
                 <form method="post" action="~/Home/ImportExcel" enctype="multipart/form-data">
-                    <input type="file" name="file"/>
+                    <input type="file" name="file" accept=".xlsx" />
+                    <span style="color:red;">@ViewData["UploadMessage"]</span>
                     <input type="submit" value="Import" class="btn btn-danger m-1" />
                 </form>
             </div>
