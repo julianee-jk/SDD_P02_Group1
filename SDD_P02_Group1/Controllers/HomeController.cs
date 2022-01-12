@@ -245,7 +245,7 @@ namespace SDD_P02_Group1.Controllers
                 var Data = new List<object[]>()
                     {
                       new object[] { spendingData },
-                      new object[] { "User ID:" + userid },
+                      new object[] { "User ID: " + userid },
                     };
 
                 //2 is rowNumber 1 is column number
@@ -314,6 +314,37 @@ namespace SDD_P02_Group1.Controllers
 
             // Call the Index action of Home controller
             return RedirectToAction("Index");
+        }
+
+        public async Task<List<WeeklySpending>> ImportExcel(IFormFile file)
+        {
+            var weeklySpendingList = new List<WeeklySpending>();
+            using (var stream = new MemoryStream())
+            {
+                await file.CopyToAsync(stream);
+                using (var package = new ExcelPackage(stream))
+                {
+                    ExcelWorksheet worksheet = package.Workbook.Worksheets[0];
+                    var rowcount = worksheet.Dimension.Rows;
+                    for (int row = 2; row <= rowcount; row++)
+                    {
+                        weeklySpendingList.Add(new WeeklySpending
+                        {
+                            UserID = Convert.ToInt32(worksheet.Cells[2, 10].Value.ToString().Trim()),
+                            firstDateOfWeek = Convert.ToDateTime(worksheet.Cells[row, 1].Value.ToString().Trim()),
+                            mondaySpending = Convert.ToDecimal(worksheet.Cells[row, 2].Value.ToString().Trim()),
+                            tuesdaySpending = Convert.ToDecimal(worksheet.Cells[row, 3].Value.ToString().Trim()),
+                            wednesdaySpending = Convert.ToDecimal(worksheet.Cells[row, 4].Value.ToString().Trim()),
+                            thursdaySpending = Convert.ToDecimal(worksheet.Cells[row, 5].Value.ToString().Trim()),
+                            fridaySpending = Convert.ToDecimal(worksheet.Cells[row, 6].Value.ToString().Trim()),
+                            saturdaySpending = Convert.ToDecimal(worksheet.Cells[row, 7].Value.ToString().Trim()),
+                            sundaySpending = Convert.ToDecimal(worksheet.Cells[row, 8].Value.ToString().Trim()),
+                            totalSpending = Convert.ToDecimal(worksheet.Cells[row, 9].Value.ToString().Trim()),
+                        });
+                    }
+                }
+            }
+            return weeklySpendingList;
         }
     }
 }

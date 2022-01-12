@@ -29,8 +29,9 @@
                 <form method="post" action="~/Home/CreateExcel">
                     <input type="submit" value="Export" class="btn btn-danger m-1" />
                 </form>
-                <form method="post" action="#">
-                    <input type="submit" value="Inport" class="btn btn-danger m-1" />
+                <form method="post" action="~/Home/ImportExcel" enctype="multipart/form-data">
+                    <input type="file" name="file"/>
+                    <input type="submit" value="Import" class="btn btn-danger m-1" />
                 </form>
             </div>
 
