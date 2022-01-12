@@ -57,17 +57,23 @@ namespace SDD_P02_Group1.DAL
             return card.CardID;
         }
 
-        public UserCard GetUserCardDetails(int cardid)
+        public UserCard GetUserCardDetails(int userid, int cardid)
         {
-            UserCard card = new UserCard();
+            UserCard usercard = new UserCard();
             //Create a SqlCommand object from connection object
             SqlCommand cmd = conn.CreateCommand();
 
-            cmd.CommandText = @"SELECT * FROM UserCard WHERE CardID = @cardid";
-            cmd.Parameters.AddWithValue("@cardid", cardid);
+            //Specify the SELECT SQL statement
+            cmd.CommandText = @"SELECT * FROM UserCard 
+                                WHERE UserID = @selectedUserID AND CardID = @selectedCardID";
+
+            //parameter is retrieved from the method parameter “userid”.
+            cmd.Parameters.AddWithValue("@selectedUserID", userid);
+            cmd.Parameters.AddWithValue("@selectedCardID", cardid);
 
             //Open a database connection
             conn.Open();
+
             //Execute SELCT SQL through a DataReader
             SqlDataReader reader = cmd.ExecuteReader();
 
@@ -76,18 +82,67 @@ namespace SDD_P02_Group1.DAL
                 //Read the record from database
                 while (reader.Read())
                 {
-                    card.CardID = cardid;
-                    card.CardName = reader.GetString(1);
-                    card.CardType = reader.GetString(2);
-                    card.CardDesc = !reader.IsDBNull(3) ? reader.GetString(3) : (string?)null;
-                    card.UserID = reader.GetInt32(4);
+                    // Fill judge object with values from the data reader
+                    usercard.CardID = cardid;
+                    usercard.CardName = reader.GetString(1);
+                    usercard.CardType = reader.GetString(2);
+                    usercard.CardDesc = reader.GetString(3);
+
                 }
             }
             //Close data reader
             reader.Close();
             //Close database connection
             conn.Close();
-            return card;
+            return usercard;
+        }
+
+        public UserCardSpending GetUserCardSpendingsDetails(int userid, int cardid)
+        {
+            List<UserCardSpending> userCardSpendingsList = new List<UserCardSpending>();
+            UserCardSpending usercardspending = new UserCardSpending();
+            //Create a SqlCommand object from connection object
+            SqlCommand cmd = conn.CreateCommand();
+
+            //Specify the SELECT SQL statement
+            cmd.CommandText = @"SELECT * FROM UserCardSpending 
+                                WHERE CardID = 
+                                (SELECT CardID FROM UserCard WHERE UserID = @selectedUserID AND CardID = @selectedCardID)";
+
+            //parameter is retrieved from the method parameter “userid”.
+            cmd.Parameters.AddWithValue("@selectedUserID", userid);
+            cmd.Parameters.AddWithValue("@selectedCardID", cardid);
+            //Open a database connection
+            conn.Open();
+
+            //Execute SELCT SQL through a DataReader
+            SqlDataReader reader = cmd.ExecuteReader();
+
+            if (reader.HasRows)
+            {
+                //Read the record from database
+                while (reader.Read())
+                {
+                    usercardspending.CardSpendingID = reader.GetInt32(0);
+                    usercardspending.DateOfTransaction = reader.GetDateTime(1);
+                    usercardspending.AmountSpent = reader.GetDecimal(2);
+
+                    userCardSpendingsList.Add(new UserCardSpending
+                    {
+                        AmountSpent = usercardspending.AmountSpent
+                    });
+
+                    foreach (UserCardSpending s in userCardSpendingsList)
+                    {
+                        usercardspending.TotalCardAmountSpent += s.AmountSpent; // TO:DO
+                    }
+                }
+            }
+            //Close data reader
+            reader.Close();
+            //Close database connection
+            conn.Close();
+            return usercardspending;
         }
 
         public List<UserCard> GetAllUserCard (int userid)

@@ -15,7 +15,7 @@ namespace SDD_P02_Group1.Controllers
     public class UserCardController : Controller
     {
         private UserCardDAL UserCardContext = new UserCardDAL();
-        private UserDAL userContext = new UserDAL();
+        private UserCardDAL userCardContext = new UserCardDAL();
 
         // GET: LiabilityController
         public ActionResult Index()
@@ -29,8 +29,8 @@ namespace SDD_P02_Group1.Controllers
         public ActionResult Details(int? cardid, int? userid)
         {
 
-            UserCard usercard = userContext.GetUserCardDetails(userid.Value, cardid.Value);
-            UserCardSpending userCardSpending = userContext.GetUserCardSpendingsDetails(userid.Value);
+            UserCard usercard = userCardContext.GetUserCardDetails(userid.Value, cardid.Value);
+            UserCardSpending userCardSpending = userCardContext.GetUserCardSpendingsDetails(userid.Value, cardid.Value);
 
             UserCardSpendingViewModel userCardSpendingVM = new UserCardSpendingViewModel();
 
