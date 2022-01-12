@@ -18,27 +18,25 @@
             userRole = Context.Session.GetString("Role");
             <p style="color: #0E152D;">You are logged in as a <span style="color: #a629c2 ">@userRole</span></p>
 
-            <h3>Current Week Spendings</h3>
+            <hr />
+            <h3 style="margin-top: 2em; margin-bottom:5px">Current Week Spendings</h3>
             <div class="text-center">
                 <partial name="~/Views/Home/_ViewSpendings.cshtml" model="@Model.sp" />
             </div>
 
             //<p class="text-center" style="margin: 1rem ">Export spendings <a href="#" data-toggle="modal" data-target="#export">here</a><br></p>
-
-            <div class="row float-right">
+            <div class="row" style="float: right">
                 <form method="post" action="~/Home/CreateExcel">
                     <input type="submit" value="Export" class="btn btn-danger m-1" />
                 </form>
                 <form method="post" action="~/Home/ImportExcel" enctype="multipart/form-data">
-                    <input type="file" name="file" accept=".xlsx" />
-                    <span style="color:red;">@ViewData["UploadMessage"]</span>
-                    <input type="submit" value="Import" class="btn btn-danger m-1" />
+                    <div style="display: flex; justify-content: center; flex-direction: column">
+                        <input type="submit" value="Import" class="btn btn-danger m-1" style="width: 13em" />
+                        <input type="file" name="file" accept=".xlsx" style="margin-left: 4px;" />
+                    </div>
                 </form>
             </div>
-
-            <br /><br />
-
-            <h3> Upcomming Liabilities</h3>
+            <h3 style="margin-top: 4em; margin-bottom: 5px">Upcoming Liabilities</h3>
             <div class="text-center">
                 <partial name="~/Views/Home/_ViewLiabilities.cshtml" model="@Model.lb" />
             </div>
