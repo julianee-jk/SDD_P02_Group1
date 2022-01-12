@@ -3,12 +3,19 @@
 @{
     ViewData["Title"] = "Index";
 }
-
+<link href='https://unpkg.com/boxicons@2.1.1/css/boxicons.min.css' rel='stylesheet'>
 <h2 style="margin-top: 2em;"><span style="color: #7f218a;">Liabilities</span></h2>
 
 <p>
     <a asp-controller="Liability" asp-action="Create">Add New Liability</a>
 </p>
+<div style="width: 300px" class="input-group rounded">
+    <input type="search" class="form-control rounded" placeholder="Search" id="LiabilitySearch"/>
+    <span class="input-group-text border-0">
+        <i class='bx bx-search'></i>
+    </span>
+</div>
+<br />
 <table>
     <thead>
         <tr>
@@ -19,7 +26,7 @@
     <tbody>
         @foreach (var item in Model)
         {
-            <tr>
+            <tr class="LiabilitySearch">
                 <td>
                     @item.LiabilityName
                 </td>
@@ -35,3 +42,26 @@
         }
     </tbody>
 </table>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+    $(document).ready(function () {
+        function Contains(text_one, text_two) {
+            if (text_one.indexOf(text_two) != -1)
+                return true;
+        }
+        $("#LiabilitySearch").keyup(function () {
+            var searchText = $("#LiabilitySearch").val().toLowerCase();
+
+            $(".LiabilitySearch").each(function () {
+                if (!Contains($(this).text().toLowerCase(), searchText)) {
+                    $(this).hide();
+                }
+                else {
+                    $(this).show();
+                }
+
+            });
+        });
+
+    });
+</script>
