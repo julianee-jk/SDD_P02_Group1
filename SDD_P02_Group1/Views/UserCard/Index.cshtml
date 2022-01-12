@@ -3,50 +3,80 @@
 @{
     ViewData["Title"] = "Cards";
 }
-
+<link href='https://unpkg.com/boxicons@2.1.1/css/boxicons.min.css' rel='stylesheet'>
 <h2 style="margin-top: 2em;"><span style="color: #7f218a;">Credit Cards</span></h2>
 
 <p>
     <a asp-controller="UserCard" asp-action="Create">Add New Card</a>
 </p>
 
+<div style="width: 300px" class="input-group rounded">
+    <input type="search" class="form-control rounded" placeholder="Search" id="CardSearch" />
+    <span class="input-group-text border-0">
+        <i class='bx bx-search'></i>
+    </span>
+</div>
+<br />
+
 @if (Model.ToList().Count > 0)
 {
-
-
-<table>
-    <thead>
-        <tr>
-            <th>Card Name</th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @{
-            var count = 1;
-            foreach (var item in Model)
-            {
-                <tr>
-                    <td>
-                        @item.CardName
-                    </td>
-                    <td>
-                        <div>
-                            <a asp-action="Details" asp-controller="UserCard"
-                               asp-route-cardid="@item.CardID" asp-route-userid="@item.UserID" style="padding-left: 1em;">Details</a> |
-                            <a asp-action="Delete" asp-controller="UserCard"
-                               asp-route-userid="@item.UserID" asp-route-cardid="@item.CardID">Delete</a>
-                        </div>
-                    </td>
-                </tr>
-                count++;
+    <table>
+        <thead>
+            <tr>
+                <th>Card Name</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @{
+                var count = 1;
+                foreach (var item in Model)
+                {
+                    <tr class="CardSearch">
+                        <td>
+                            @item.CardName
+                        </td>
+                        <td>
+                            <div>
+                                <a asp-action="Details" asp-controller="UserCard"
+                                   asp-route-cardid="@item.CardID" asp-route-userid="@item.UserID" style="padding-left: 1em;">Details</a> |
+                                <a asp-action="Delete" asp-controller="UserCard"
+                                   asp-route-userid="@item.UserID" asp-route-cardid="@item.CardID">Delete</a>
+                            </div>
+                        </td>
+                    </tr>
+                    count++;
+                }
             }
-        }
-    </tbody>
-</table>
+        </tbody>
+    </table>
 }
 
-else 
-{ 
+else
+{
     <p>You do not have any cards added!</p>
 }
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+    $(document).ready(function () {
+        function Contains(text_one, text_two) {
+            if (text_one.indexOf(text_two) != -1)
+                return true;
+        }
+        $("#CardSearch").keyup(function () {
+            var searchText = $("#CardSearch").val().toLowerCase();
+
+            $(".CardSearch").each(function () {
+                if (!Contains($(this).text().toLowerCase(), searchText)) {
+                    $(this).hide();
+                }
+                else {
+                    $(this).show();
+                }
+
+            });
+        });
+
+    });
+</script>
