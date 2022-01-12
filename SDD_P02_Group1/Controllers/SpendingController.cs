@@ -24,7 +24,6 @@ namespace SDD_P02_Group1.Controllers
             while (today.DayOfWeek.ToString() != "Monday")
             {
                 today = today.AddDays(-1);
-                Console.WriteLine(today);
             }
             
             if (!SpendingContext.IsSpendingExist(userid, today))
@@ -65,6 +64,40 @@ namespace SDD_P02_Group1.Controllers
             sv.spendrecord = recordList;
 
             return View(sv);
+        }
+
+        // GET: SpendingController/Create
+        public ActionResult Create()
+        {
+            return View();
+        }
+
+        // POST: SpendingController/Create
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Create(SpendingRecord record)
+        {
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    int userid = HttpContext.Session.GetInt32("UserID").Value;
+                    //Add user record to database
+                    SpendingContext.AddSpending(record, userid);
+                    SpendingContext.UpdateWeeklySpending(userid, record);
+                    //Redirect user to Home/Login view
+                    return RedirectToAction("Index", "Spending");
+                }
+                else
+                {
+                    //Input validation fails, return to the Create view to display error message
+                    return RedirectToAction("Create", "Spending");
+                }
+            }
+            catch
+            {
+                return View();
+            }
         }
     }
 }
