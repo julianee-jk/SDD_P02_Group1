@@ -182,5 +182,24 @@ namespace SDD_P02_Group1.DAL
             return userCardList;
         }
 
+        public int Delete(int userID, int cardID)
+        {
+            //Instantiate a SqlCommand object, supply it with a DELETE SQL statement
+            SqlCommand cmd = conn.CreateCommand();
+            cmd.CommandText = @"DELETE FROM UserCardSpending WHERE CardID = (SELECT CardID FROM UserCard WHERE UserID = @selectUserID AND CardID = @selectCardID);
+                                DELETE FROM UserCard WHERE UserID = @selectUserID AND CardID = @selectCardID;";
+
+            cmd.Parameters.AddWithValue("@selectUserID", userID);
+            cmd.Parameters.AddWithValue("@selectCardID", cardID);
+            //Open a database connection
+            conn.Open();
+            int rowAffected = 0;
+            //Execute the DELETE SQL to remove the competition score record
+            rowAffected += cmd.ExecuteNonQuery();
+            //Close database connection
+            conn.Close();
+            //Return number of row of competition score record updated or deleted
+            return rowAffected;
+        }
     }
 }

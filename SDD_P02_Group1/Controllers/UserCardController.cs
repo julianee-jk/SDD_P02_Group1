@@ -20,6 +20,10 @@ namespace SDD_P02_Group1.Controllers
         // GET: LiabilityController
         public ActionResult Index()
         {
+            if ((HttpContext.Session.GetString("Role") == null) || (HttpContext.Session.GetString("Role") != "User"))
+            {
+                return RedirectToAction("Index", "Home");
+            }
             int userid = HttpContext.Session.GetInt32("UserID").Value;
             List<UserCard> userCardList = UserCardContext.GetAllUserCard(userid);
             return View(userCardList);
@@ -98,25 +102,33 @@ namespace SDD_P02_Group1.Controllers
         }
 
         // GET: LiabilityController/Delete/5
-        public ActionResult Delete(int id)
+        public ActionResult Delete(int userid, int cardid)
         {
-            return View();
+            // Stop accessing the action if not logged in
+            // or account not in the "Judge" role
+            if ((HttpContext.Session.GetString("Role") == null) ||
+            (HttpContext.Session.GetString("Role") != "User"))
+            {
+                return RedirectToAction("Index", "Home");
+            }
+            UserCard userCard = userCardContext.GetUserCardDetails(userid, cardid);
+            if (userCard == null)
+            {
+                //Return to listing page, not allowed to edit
+                return RedirectToAction("Index");
+            }
+            return View(userCard);
         }
 
         // POST: LiabilityController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        public ActionResult Delete(UserCard userCard)
         {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
+            userCardContext.Delete(userCard.UserID, userCard.CardID);
+            return RedirectToAction("Index");
         }
+
 
         // Get all card types list
         private List<SelectListItem> GetCardTypes()
