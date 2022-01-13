@@ -195,7 +195,7 @@ namespace SDD_P02_Group1.Controllers
                 //Add header row columns name in string list array
                 var headerRow = new List<string[]>()
                   {
-                    new string[] { "First Date Of Week", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday", "Total Spending" }
+                    new string[] { "First Date Of Week", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday", "Total Spending", "User ID" }
                   };
 
                
@@ -233,23 +233,19 @@ namespace SDD_P02_Group1.Controllers
                 while (currentMonday.DayOfWeek.ToString() != "Monday")
                 {
                     currentMonday = currentMonday.AddDays(-1);
-                    Console.WriteLine("lolololololol" + currentMonday);
                 }
                 Spending currweek = SpendingContext.GetSpendingByDate(userid, currentMonday);
 
-                var spendingData = new List<string>(){
-                        currweek.FirstDateOfWeek.ToString(), currweek.TueSpending.ToString(), currweek.WedSpending.ToString()
-                        , currweek.ThuSpending.ToString(), currweek.FriSpending.ToString(), currweek.SatSpending.ToString()
-                        , currweek.SunSpending.ToString(), currweek.TotalSpending.ToString()
-                    };
-                var Data = new List<object[]>()
-                    {
-                      new object[] { spendingData },
-                      new object[] { "User ID: " + userid },
-                    };
-
                 //2 is rowNumber 1 is column number
-                worksheet.Cells[2, 1].LoadFromArrays(Data);
+                worksheet.Cells[2, 1].Value = currweek.FirstDateOfWeek.ToString();
+                worksheet.Cells[2, 2].Value = ConvertDecimal(currweek.MonSpending.ToString());
+                worksheet.Cells[2, 3].Value = ConvertDecimal(currweek.TueSpending.ToString());
+                worksheet.Cells[2, 4].Value = ConvertDecimal(currweek.WedSpending.ToString());
+                worksheet.Cells[2, 5].Value = ConvertDecimal(currweek.ThuSpending.ToString());
+                worksheet.Cells[2, 6].Value = ConvertDecimal(currweek.FriSpending.ToString());
+                worksheet.Cells[2, 7].Value = ConvertDecimal(currweek.SatSpending.ToString());
+                worksheet.Cells[2, 8].Value = ConvertDecimal(currweek.SunSpending.ToString());
+                worksheet.Cells[2, 10].Value = userid;
 
                 //Save Excel file
                 excel.SaveAs(excelFile);
@@ -259,6 +255,15 @@ namespace SDD_P02_Group1.Controllers
 
             //return RedirectToAction("Index");
             return File(fileBytes, System.Net.Mime.MediaTypeNames.Application.Octet, fileName);
+        }
+
+        public decimal ConvertDecimal(string value)
+        {
+            if(value == null || value == "")
+            {
+                return 0;
+            }
+            else { return Convert.ToDecimal(value); }
         }
 
         public ActionResult AccountLogin(IFormCollection formData)
