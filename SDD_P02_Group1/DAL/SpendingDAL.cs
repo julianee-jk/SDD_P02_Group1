@@ -115,28 +115,121 @@ namespace SDD_P02_Group1.DAL
 
             int day = (int)record.DateOfTransaction.DayOfWeek;
             string[] dayname = { "SunSpending", "MonSpending", "TueSpending", "WedSpending", "ThuSpending", "FriSpending", "SatSpending" };
-            DateTime date = DateTime.Now.Date.AddDays(-(day - 1));
 
+            DateTime today = DateTime.Today;
+            while (today.DayOfWeek.ToString() != "Monday")
+            {
+                today = today.AddDays(-1);
+            }
 
-            string str = "UPDATE UserWeeklySpending SET " + dayname[day] + " = CASE WHEN " + dayname[day] + " IS NULL THEN " + record.AmountSpent + " ELSE " + dayname[day] + " + " + record.AmountSpent + " END WHERE FirstDateOfWeek = \'" + date.ToString("yyyy/MM/dd") + "\' AND UserID = " + userid;
-            //Create a SqlCommand object and specify the SQL statement 
+            Spending spending = GetSpendingByDate(userid, today);
+            //Create a SqlCommand object from connection object
+            SqlCommand cmd = conn.CreateCommand();
 
-            Console.WriteLine(str);
-            SqlCommand cmd = new SqlCommand();
-            cmd.CommandText = "" + str;
-            /*
-            cmd.CommandText = @"UPDATE UserWeeklySpending SET @day = CASE WHEN @day IS NULL THEN @amt ELSE @day + @amt END WHERE FirstDateOfWeek = @date AND UserID = @userid";
+            if (dayname[day] == "MonSpending")
+            {
+                if (spending.MonSpending.HasValue)
+                {
+                    spending.MonSpending += record.AmountSpent;
+                }
+                else
+                {
+                    spending.MonSpending = record.AmountSpent;
+                }
+                cmd.CommandText = @"UPDATE UserWeeklySpending SET MonSpending = @value, TotalSpending = @totalvalue WHERE FirstDateOfWeek = @date AND UserID = @id";
+                cmd.Parameters.AddWithValue("@value", spending.MonSpending);
+            }
+            else if (dayname[day] == "TueSpending")
+            {
+                if (spending.TueSpending is null)
+                {
+                    spending.TueSpending = record.AmountSpent;
+                }
+                else
+                {
+                    spending.TueSpending += record.AmountSpent;
+                }
+                cmd.CommandText = @"UPDATE UserWeeklySpending SET TueSpending = @value, TotalSpending = @totalvalue WHERE FirstDateOfWeek = @date AND UserID = @id";
+                cmd.Parameters.AddWithValue("@value", spending.TueSpending);
+            }
+            else if (dayname[day] == "WedSpending")
+            {
+                if (spending.WedSpending is null)
+                {
+                    spending.WedSpending = record.AmountSpent;
+                }
+                else
+                {
+                    spending.WedSpending += record.AmountSpent;
+                }
+                cmd.CommandText = @"UPDATE UserWeeklySpending SET WedSpending = @value, TotalSpending = @totalvalue WHERE FirstDateOfWeek = @date AND UserID = @id";
+                cmd.Parameters.AddWithValue("@value", spending.WedSpending);
+            }
+            else if (dayname[day] == "ThuSpending")
+            {
+                if (spending.ThuSpending is null)
+                {
+                    spending.ThuSpending = record.AmountSpent;
+                }
+                else
+                {
+                    spending.ThuSpending += record.AmountSpent;
+                }
+                cmd.CommandText = @"UPDATE UserWeeklySpending SET ThuSpending = @value, TotalSpending = @totalvalue WHERE FirstDateOfWeek = @date AND UserID = @id";
+                cmd.Parameters.AddWithValue("@value", spending.ThuSpending);
+            }
+            else if (dayname[day] == "FriSpending")
+            {
+                if (spending.FriSpending is null)
+                {
+                    spending.FriSpending = record.AmountSpent;
+                }
+                else
+                {
+                    spending.FriSpending += record.AmountSpent;
+                }
+                cmd.CommandText = @"UPDATE UserWeeklySpending SET FriSpending = @value, TotalSpending = @totalvalue WHERE FirstDateOfWeek = @date AND UserID = @id";
+                cmd.Parameters.AddWithValue("@value", spending.FriSpending);
+            }
+            else if (dayname[day] == "SatSpending")
+            {
+                if (spending.SatSpending is null)
+                {
+                    spending.SatSpending = record.AmountSpent;
+                }
+                else
+                {
+                    spending.SatSpending += record.AmountSpent;
+                }
+                cmd.CommandText = @"UPDATE UserWeeklySpending SET SatSpending = @value, TotalSpending = @totalvalue WHERE FirstDateOfWeek = @date AND UserID = @id";
+                cmd.Parameters.AddWithValue("@value", spending.SatSpending);
+            }
+            else if (dayname[day] == "SunSpending")
+            {
+                if (spending.SunSpending.HasValue)
+                {
+                    spending.SunSpending += record.AmountSpent;
+                }
+                else
+                {
+                    spending.SunSpending = record.AmountSpent;
+                }
+                cmd.CommandText = @"UPDATE UserWeeklySpending SET SunSpending = @value, TotalSpending = @totalvalue WHERE FirstDateOfWeek = @date AND UserID = @id";
+                cmd.Parameters.AddWithValue("@value", spending.SunSpending);
+            }
+            
+            if (spending.TotalSpending is null)
+            {
+                spending.TotalSpending = record.AmountSpent;
+            }
+            else
+            {
+                spending.TotalSpending += record.AmountSpent;
+            }
+            cmd.Parameters.AddWithValue("@totalvalue", spending.TotalSpending);
+            cmd.Parameters.AddWithValue("@date", spending.FirstDateOfWeek);
+            cmd.Parameters.AddWithValue("@id", spending.UserID);
 
-            cmd.Parameters.AddWithValue("@day", dayname[day]);
-            cmd.Parameters.AddWithValue("@amt", record.AmountSpent);
-            cmd.Parameters.AddWithValue("@date", date);
-            cmd.Parameters.AddWithValue("@userid", userid);
-            */
-
-            Console.WriteLine(dayname[day]);
-            Console.WriteLine(record.AmountSpent);
-            Console.WriteLine(userid);
-            Console.WriteLine(date);
 
             //Open a database connection
             conn.Open();

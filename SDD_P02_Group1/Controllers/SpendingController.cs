@@ -82,10 +82,10 @@ namespace SDD_P02_Group1.Controllers
                 if (ModelState.IsValid)
                 {
                     int userid = HttpContext.Session.GetInt32("UserID").Value;
-                    //Add user record to database
+                    //Add spending record to database
                     SpendingContext.AddSpending(record, userid);
                     SpendingContext.UpdateWeeklySpending(userid, record);
-                    //Redirect user to Home/Login view
+
                     return RedirectToAction("Index", "Spending");
                 }
                 else
