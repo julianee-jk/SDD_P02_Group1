@@ -128,13 +128,13 @@ namespace SDD_P02_Group1.DAL
 
             if (dayname[day] == "MonSpending")
             {
-                if (spending.MonSpending.HasValue)
+                if (spending.MonSpending is null)
                 {
-                    spending.MonSpending += record.AmountSpent;
+                    spending.MonSpending = record.AmountSpent;
                 }
                 else
                 {
-                    spending.MonSpending = record.AmountSpent;
+                    spending.MonSpending += record.AmountSpent;
                 }
                 cmd.CommandText = @"UPDATE UserWeeklySpending SET MonSpending = @value, TotalSpending = @totalvalue WHERE FirstDateOfWeek = @date AND UserID = @id";
                 cmd.Parameters.AddWithValue("@value", spending.MonSpending);
