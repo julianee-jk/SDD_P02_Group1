@@ -65,26 +65,29 @@ namespace SDD_P02_Group1.Controllers
         // GET: LiabilityController/Edit/5
         public ActionResult Edit(int id)
         {
-            return View();
+            Liability liability = LiabilityContext.GetLiabilityDetails(id);
+            TempData["LiabilityID"] = id;
+            return View(liability);
         }
 
         // POST: LiabilityController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public ActionResult Edit(Liability liability)
         {
             try
             {
-                return RedirectToAction(nameof(Index));
+                LiabilityContext.EditLiability(liability, Convert.ToInt32(TempData["assetID"]));
+                return RedirectToAction("Index");
             }
             catch
             {
-                return View();
+                return View(liability);
             }
         }
 
         // GET: LiabilityController/Delete/5
-        public ActionResult Delete(int id)
+        public ActionResult Delete()
         {
             return View();
         }
@@ -92,16 +95,10 @@ namespace SDD_P02_Group1.Controllers
         // POST: LiabilityController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        public ActionResult Delete(int id)
         {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
+            LiabilityContext.DeleteLiability(id);
+            return RedirectToAction("Index");
         }
     }
 }
