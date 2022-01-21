@@ -272,7 +272,7 @@ namespace SDD_P02_Group1.Controllers
             // Email address converted to lowercase
             string emailAddress = formData["txtEmail"].ToString().ToLower();
             string password = formData["txtPassword"].ToString();
-
+                         
             List<User> userList = UserContext.GetAllUsers(); // Check judge list
 
             foreach (User user in userList)
