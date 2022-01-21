@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Http;
 using OfficeOpenXml;
 using System.IO;
 using OfficeOpenXml.DataValidation;
+using System.Drawing;
 
 namespace SDD_P02_Group1.Controllers
 {
@@ -221,6 +222,8 @@ namespace SDD_P02_Group1.Controllers
                 //lock all cells exept inputs
                 worksheet.Protection.IsProtected = true;
                 worksheet.Cells["B2:H2"].Style.Locked = false;
+                worksheet.Cells["B2:H2"].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
+                worksheet.Cells["B2:H2"].Style.Fill.BackgroundColor.SetColor(Color.Yellow);
 
                 //add formula to total spent column
                 worksheet.Cells["I2"].Formula = "=SUM(B2:H2)";
