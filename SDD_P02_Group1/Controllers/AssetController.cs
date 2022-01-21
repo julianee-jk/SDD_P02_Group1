@@ -80,43 +80,31 @@ namespace SDD_P02_Group1.Controllers
             return View(asset);
         }
 
-        [HttpPost]
-        public ActionResult SaveChanges(IFormCollection formData, int id)
-        {
-            string AssetDescN = formData["change2"].ToString();
-            string AssetTypeN = formData["change3"].ToString();
-            decimal CurrentValueN = Convert.ToDecimal(formData["change5"]);
-
-
-            Asset asset = assetContext.GetAssetDetails(id);
-            
-            
-
-            assetContext.AddChange(asset.AssetID, asset, AssetDescN, AssetTypeN, CurrentValueN);
-            //AssetType
-            //change3
-
-            //CurrentValue
-            //change5
-
-
-            return View();
-            // get assetid?
-
-        }
-
         // POST: AssetController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Edit(Asset asset)
         {
-        
+            int userid = HttpContext.Session.GetInt32("UserID").Value;
+
+
             if (ModelState.IsValid)
             {
                 //Update staff record to database
-                Console.WriteLine("lolol" + TempData["assetID"]);
-                Console.WriteLine("lolol" + asset.CurrentValue);
+                //Console.WriteLine("lolol" + TempData["assetID"]);
+                //Console.WriteLine("lolol" + asset.CurrentValue);
+
+                Asset a1 = assetContext.GetAssetDetails(Convert.ToInt32(TempData["assetID"]));
+                Console.WriteLine(a1.CurrentValue);
+
                 assetContext.EditAsset(asset, Convert.ToInt32(TempData["assetID"]));
+
+                Asset a2 = assetContext.GetAssetDetails(Convert.ToInt32(TempData["assetID"]));       
+                Console.WriteLine(a2.CurrentValue);
+
+                assetContext.AddChange(userid, a1, a2);
+
+
                 return RedirectToAction("Index");
             }
             else
@@ -137,7 +125,24 @@ namespace SDD_P02_Group1.Controllers
                 ViewData["editable"] = "true";
                 return View();
             }*/
+        }
 
+        public ActionResult History()
+        {
+            if (HttpContext.Session.GetString("Role") != "User")
+            {
+                return RedirectToAction("Index", "Home");
+            }
+
+            int userid = HttpContext.Session.GetInt32("UserID").Value;
+
+            //005
+            //List<AssetHistory> staffList = assetContext.GetChanges(userid);
+
+            List<AssetHistory> staffList = assetContext.GetChanges(userid);
+            //002
+            //return null;
+            return View(staffList);
         }
 
         // GET: AssetController/Delete/5

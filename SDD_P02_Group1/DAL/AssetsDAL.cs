@@ -175,6 +175,151 @@ namespace SDD_P02_Group1.DAL
             return count;
         }
 
+        public void AddChange(int userid, Asset a1, Asset a2)
+        {
+            //Create a SqlCommand object from connection object
+            SqlCommand cmd = conn.CreateCommand();
+
+            cmd.Parameters.AddWithValue("@userid", userid);
+
+            cmd.Parameters.AddWithValue("@assetid", a1.AssetID);
+
+            if (a1.AssetType == a2.AssetType)
+            {
+                cmd.Parameters.AddWithValue("@assettype", a1.AssetType);
+                cmd.Parameters.AddWithValue("@assettypen", DBNull.Value);
+            }
+            else
+            {
+                cmd.Parameters.AddWithValue("@assettype", a1.AssetType);
+                cmd.Parameters.AddWithValue("@assettypen", DBNull.Value);
+            }
+
+            if (a1.AssetDesc == a2.AssetDesc)
+            {
+                cmd.Parameters.AddWithValue("@assetdesc", a1.AssetDesc);
+                cmd.Parameters.AddWithValue("@assetdescn", DBNull.Value);
+            }
+            else
+            {
+                cmd.Parameters.AddWithValue("@assetdesc", a1.AssetDesc);
+                cmd.Parameters.AddWithValue("@assetdescn", a2.AssetDesc);
+            }
+
+            if (a1.CurrentValue == a2.CurrentValue)
+            {
+                cmd.Parameters.AddWithValue("@currentvalue", a1.CurrentValue);
+                cmd.Parameters.AddWithValue("@currentvaluen", DBNull.Value);
+            }
+            else
+            {
+                cmd.Parameters.AddWithValue("@currentvalue", a1.CurrentValue);
+                cmd.Parameters.AddWithValue("@currentvaluen", a2.CurrentValue);
+            }
+
+            if (a1.CurrentValue != a2.CurrentValue || a1.AssetDesc != a2.AssetDesc || a1.AssetType != a2.AssetType)
+            {
+                cmd.CommandText = @"DECLARE @Time AS DATETIME = GETDATE();  
+                INSERT INTO 
+                    AssetChanges 
+                        (UserID, AssetID, Timestamp, 
+                        AssetType, AssetTypeNew, 
+                        AssetDesc, AssetDescNew,     
+                        CurrentValue, CurrentValueNew)
+                    OUTPUT INSERTED.AssetID VALUES 
+                        (@userid, @assetid, @Time, 
+                        @assettype, @assettypen, 
+                        @assetdesc, @assetdescn, 
+                        @currentvalue, @currentvaluen)";
+
+                //A connection to database must be opened before any operations made.
+                conn.Open();
+
+                SqlDataReader reader = cmd.ExecuteReader();
+
+                conn.Close();
+            }
+        }
+
+        //005
+        public List<AssetHistory> GetChanges(int userid)
+        {
+            List<AssetHistory> AHL = new List<AssetHistory>();
+
+            SqlCommand cmd2 = conn.CreateCommand();
+
+            cmd2.Parameters.AddWithValue("@userid", userid);
+
+            cmd2.CommandText = @"SELECT * FROM AssetChanges WHERE UserID = @userid";
+
+            conn.Open();
+
+            SqlDataReader reader = cmd2.ExecuteReader();
+
+            while (reader.Read())
+            {
+                AHL.Add(
+                new AssetHistory
+                {
+                    UserID = reader.GetInt32(0),
+                    AssetID = reader.GetInt32(1),
+                    Timestamp = Convert.ToDateTime(reader.GetString(2)),
+                    AssetType = reader.GetString(3),
+                    AssetTypeNew = !reader.IsDBNull(4) ? reader.GetString(4) : (string?)null,
+                    AssetDesc = reader.GetString(5),
+                    AssetDescNew = !reader.IsDBNull(6) ? reader.GetString(6) : (string?)null,
+                    CurrentValue = reader.GetDecimal(7),
+                    CurrentValueNew = !reader.IsDBNull(8) ? reader.GetDecimal(8) : (decimal?)null
+                }
+                );
+            }
+
+            reader.Close();
+
+            conn.Close();
+
+            return AHL;
+        }
+
+        //public AssetHistory GetChanges(int userid)
+        //{
+        //    List<AssetHistory> AHL = new List<AssetHistory>();
+
+        //    SqlCommand cmd2 = conn.CreateCommand();
+
+        //    cmd2.Parameters.AddWithValue("@userid", userid);
+
+        //    cmd2.CommandText = @"SELECT * FROM AssetChanges WHERE UserID = @userid";
+
+        //    conn.Open();
+
+        //    SqlDataReader reader = cmd2.ExecuteReader();
+
+        //    while (reader.Read())
+        //    {
+        //        AHL.Add(
+        //        new AssetHistory
+        //        {
+        //            UserID = reader.GetInt32(0),
+        //            AssetID = reader.GetInt32(1),
+        //            Timestamp = Convert.ToDateTime(reader.GetString(2)),
+        //            AssetType = reader.GetString(3),
+        //            AssetTypeNew = !reader.IsDBNull(4) ? reader.GetString(4) : (string?)null,
+        //            AssetDesc = reader.GetString(5),
+        //            AssetDescNew = !reader.IsDBNull(6) ? reader.GetString(6) : (string?)null,
+        //            CurrentValue = reader.GetDecimal(7),
+        //            CurrentValueNew = !reader.IsDBNull(8) ? reader.GetDecimal(8) : (decimal?)null
+        //        }
+        //        );
+        //    }
+
+        //    reader.Close();
+
+        //    conn.Close();
+
+        //    return AHL[0];
+        //}
+
         public int DeleteAsset(int assetID)
         {
             //Create a SqlCommand object from connection object

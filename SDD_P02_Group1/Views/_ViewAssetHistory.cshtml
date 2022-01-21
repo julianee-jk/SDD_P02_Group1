@@ -1,0 +1,72 @@
+﻿@*@model IEnumerable<SDD_P02_Group1.Models.Asset>*@
+@model IEnumerable<SDD_P02_Group1.Models.AssetHistory>
+@*004*@
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.UserID)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.AssetID)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Timestamp)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.AssetType)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.AssetTypeNew)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.AssetDesc)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.AssetDescNew)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CurrentValue)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CurrentValueNew)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.UserID)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.AssetID)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Timestamp)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.AssetType)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.AssetTypeNew)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.AssetDesc)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.AssetDescNew)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CurrentValue)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CurrentValueNew)
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
