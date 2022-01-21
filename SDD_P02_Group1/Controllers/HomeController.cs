@@ -331,28 +331,36 @@ namespace SDD_P02_Group1.Controllers
                 var weeklySpendingList = new List<WeeklySpending>();
                 using (var stream = new MemoryStream())
                 {
-                    await file.CopyToAsync(stream);
-                    using (var package = new ExcelPackage(stream))
+                    if (file != null)
                     {
-                        ExcelWorksheet worksheet = package.Workbook.Worksheets[0];
-                        var rowcount = worksheet.Dimension.Rows;
-                        for (int row = 2; row <= rowcount; row++)
+                        await file.CopyToAsync(stream);
+                        using (var package = new ExcelPackage(stream))
                         {
-                            weeklySpendingList.Add(new WeeklySpending
+                            ExcelWorksheet worksheet = package.Workbook.Worksheets[0];
+                            var rowcount = worksheet.Dimension.Rows;
+                            for (int row = 2; row <= rowcount; row++)
                             {
-                                UserID = Convert.ToInt32(worksheet.Cells[2, 10].Value.ToString().Trim()),
-                                FirstDateOfWeek = Convert.ToDateTime(worksheet.Cells[row, 1].Value.ToString().Trim()),
-                                MonSpending = Convert.ToDecimal(worksheet.Cells[row, 2].Value.ToString().Trim()),
-                                TueSpending = Convert.ToDecimal(worksheet.Cells[row, 3].Value.ToString().Trim()),
-                                WedSpending = Convert.ToDecimal(worksheet.Cells[row, 4].Value.ToString().Trim()),
-                                ThuSpending = Convert.ToDecimal(worksheet.Cells[row, 5].Value.ToString().Trim()),
-                                FriSpending = Convert.ToDecimal(worksheet.Cells[row, 6].Value.ToString().Trim()),
-                                SatSpending = Convert.ToDecimal(worksheet.Cells[row, 7].Value.ToString().Trim()),
-                                SunSpending = Convert.ToDecimal(worksheet.Cells[row, 8].Value.ToString().Trim()),
-                                TotalSpending = Convert.ToDecimal(worksheet.Cells[row, 9].Value.ToString().Trim()),
-                            });
+                                weeklySpendingList.Add(new WeeklySpending
+                                {
+                                    UserID = Convert.ToInt32(worksheet.Cells[2, 10].Value.ToString().Trim()),
+                                    FirstDateOfWeek = Convert.ToDateTime(worksheet.Cells[row, 1].Value.ToString().Trim()),
+                                    MonSpending = Convert.ToDecimal(worksheet.Cells[row, 2].Value.ToString().Trim()),
+                                    TueSpending = Convert.ToDecimal(worksheet.Cells[row, 3].Value.ToString().Trim()),
+                                    WedSpending = Convert.ToDecimal(worksheet.Cells[row, 4].Value.ToString().Trim()),
+                                    ThuSpending = Convert.ToDecimal(worksheet.Cells[row, 5].Value.ToString().Trim()),
+                                    FriSpending = Convert.ToDecimal(worksheet.Cells[row, 6].Value.ToString().Trim()),
+                                    SatSpending = Convert.ToDecimal(worksheet.Cells[row, 7].Value.ToString().Trim()),
+                                    SunSpending = Convert.ToDecimal(worksheet.Cells[row, 8].Value.ToString().Trim()),
+                                    TotalSpending = Convert.ToDecimal(worksheet.Cells[row, 9].Value.ToString().Trim()),
+                                });
+                            }
                         }
                     }
+                    else
+                    {
+                        Console.WriteLine("lol fuck u");
+                    }
+
                 }
                 SpendingContext.EditSpending(weeklySpendingList.First());
             }
