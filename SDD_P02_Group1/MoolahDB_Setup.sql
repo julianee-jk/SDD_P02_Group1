@@ -92,6 +92,23 @@ CREATE TABLE dbo.UserWeeklySpending
 )
 GO
 
+CREATE TABLE dbo.AssetChanges
+(
+	UserID				int				NOT NULL,
+	AssetID				int				NOT NULL,
+	Timestamp			VARCHAR(100)	NOT NULL,
+	AssetTypeOld		varchar(50)		NULL,
+	AssetTypeNew		varchar(50)		NULL,
+	AssetDescOld		varchar(200)	NULL,
+	AssetDescNew		varchar(200)	NULL,
+	CurrentValueOld		money			NULL,
+	CurrentValueNew		money			NULL,
+
+	CONSTRAINT PK_AssetChanges PRIMARY KEY NONCLUSTERED (UserID, AssetID, Timestamp),
+
+)
+GO
+
 
 /*** Dummy Values ***/
 
@@ -99,11 +116,11 @@ GO
 INSERT INTO AccountUser VALUES ('John','john123','john@gmail.com')
 INSERT INTO AccountUser VALUES ('Andy','andy123','andy@outlook.com')
 
-INSERT INTO UserAsset VALUES ('Apple Inc','Stocks',NULL,$100,$120,NULL,1)
-INSERT INTO UserAsset VALUES ('Microsoft Corp','Stocks',NULL,$200,$190,NULL,1)
+INSERT INTO UserAsset VALUES ('Apple Inc','Stocks','why',$100,$120,NULL,1)
+INSERT INTO UserAsset VALUES ('Microsoft Corp','Stocks','why',$200,$190,NULL,1)
 
-INSERT INTO UserAsset VALUES ('Tesla Inc','Stocks',NULL,$500,$550,NULL,2)
-INSERT INTO UserAsset VALUES ('Nvidia Corp','Stocks',NULL,$300,$270,NULL,2)
+INSERT INTO UserAsset VALUES ('Tesla Inc','Stocks','why',$500,$550,NULL,2)
+INSERT INTO UserAsset VALUES ('Nvidia Corp','Stocks','why',$300,$270,NULL,2)
 
 INSERT INTO UserWeeklySpending VALUES ('2021/11/01',$50,$30,$100,$15,$79,$230,$170,$647,1)
 INSERT INTO UserWeeklySpending VALUES ('2021/11/01',$10,$7,$10,$9,$21,$47,$84,$188,2)
@@ -113,3 +130,6 @@ INSERT INTO UserLiability VALUES ('Insurance Policies','Bills','Yearly subscript
 INSERT INTO UserLiability VALUES ('Phone Bill','Bills','Phone plan charged by phone company',60,'2021-12-31','Monthly',NULL,2)
 INSERT INTO UserLiability VALUES ('64 inch TV Installment','Purchase','24 months installment plan for television',52,'2021-12-31','Monthly',24,2)
 INSERT INTO UserLiability VALUES ('Housing Payments','Purchase','2 years till payments are fully paid',370,'2021-12-31','Yearly',2,2)
+
+SELECT * FROM UserAsset
+

@@ -6,7 +6,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using SDD_P02_Group1.DAL;
 using SDD_P02_Group1.Models;
-using Microsoft.AspNetCore.Http;
 
 namespace SDD_P02_Group1.Controllers
 {

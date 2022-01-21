@@ -80,6 +80,31 @@ namespace SDD_P02_Group1.Controllers
             return View(asset);
         }
 
+        [HttpPost]
+        public ActionResult SaveChanges(IFormCollection formData, int id)
+        {
+            string AssetDescN = formData["change2"].ToString();
+            string AssetTypeN = formData["change3"].ToString();
+            decimal CurrentValueN = Convert.ToDecimal(formData["change5"]);
+
+
+            Asset asset = assetContext.GetAssetDetails(id);
+            
+            
+
+            assetContext.AddChange(asset.AssetID, asset, AssetDescN, AssetTypeN, CurrentValueN);
+            //AssetType
+            //change3
+
+            //CurrentValue
+            //change5
+
+
+            return View();
+            // get assetid?
+
+        }
+
         // POST: AssetController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
