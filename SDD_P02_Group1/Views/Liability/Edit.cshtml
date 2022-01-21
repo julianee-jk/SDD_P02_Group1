@@ -1,0 +1,85 @@
+﻿@model SDD_P02_Group1.Models.Liability
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Edit</h1>
+
+<h4>Liability</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="LiabilityName" class="control-label"></label>
+                <input asp-for="LiabilityName" readonly class="form-control change" id="change7" />
+                <span asp-validation-for="LiabilityName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="LiabilityType" class="control-label"></label>
+                <input asp-for="LiabilityType" readonly class="form-control change" id="change8" />
+                <span asp-validation-for="LiabilityType" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="LiabilityDesc" class="control-label"></label>
+                <input asp-for="LiabilityDesc" readonly class="form-control change" id="change9" />
+                <span asp-validation-for="LiabilityDesc" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Cost" class="control-label"></label>
+                <input asp-for="Cost" readonly class="form-control change" id="change10" />
+                <span asp-validation-for="Cost" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="DueDate" class="control-label"></label>
+                <input asp-for="DueDate" readonly class="form-control change" id="change11" />
+                <span asp-validation-for="DueDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="RecurringType" class="control-label"></label>
+                <input asp-for="RecurringType" readonly class="form-control change" id="change12" />
+                <span asp-validation-for="RecurringType" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="RecurringDuration" class="control-label"></label>
+                <input asp-for="RecurringDuration" readonly class="form-control change" id="change13" />
+                <span asp-validation-for="RecurringDuration" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary col-sm-4" id="liabilitySaveBtn" style="display: none;" />
+            </div>
+            <div class="form-group">
+                <input type="button" value="Edit" class="btn btn-primary col-sm-4" style="display: block;" id="liabilityEditBtn" onclick="changeToEdit()" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+<script type="text/javascript">
+    function changeToEdit() {
+
+        document.getElementById("change7").readOnly = false;
+        document.getElementById("change7").className = "form-control";
+        document.getElementById("change8").readOnly = false;
+        document.getElementById("change8").className = "form-control";
+        document.getElementById("change9").readOnly = false;
+        document.getElementById("change9").className = "form-control";
+        document.getElementById("change10").readOnly = false;
+        document.getElementById("change10").className = "form-control";
+        document.getElementById("change11").readOnly = false;
+        document.getElementById("change11").className = "form-control";
+        document.getElementById("change12").readOnly = false;
+        document.getElementById("change12").className = "form-control";
+        document.getElementById("change13").readOnly = false;
+        document.getElementById("change13").className = "form-control";
+
+        document.getElementById("liabilityEditBtn").style.display = "none";
+        document.getElementById("liabilitySaveBtn").style.display = "block";
+    }
+</script>

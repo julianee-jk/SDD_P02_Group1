@@ -6,6 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using SDD_P02_Group1.DAL;
 using SDD_P02_Group1.Models;
+using SDD_P02_Group1.ViewModels;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace SDD_P02_Group1.Controllers
@@ -23,7 +24,6 @@ namespace SDD_P02_Group1.Controllers
             while (today.DayOfWeek.ToString() != "Monday")
             {
                 today = today.AddDays(-1);
-                Console.WriteLine(today);
             }
             
             if (!SpendingContext.IsSpendingExist(userid, today))
@@ -53,15 +53,51 @@ namespace SDD_P02_Group1.Controllers
             wsd.TotalSpendingDifference = (currentWeek.TotalSpending - previousWeek.TotalSpending);
             wsd.TotalSpendingDifferencePercentage = ((currentWeek.TotalSpending - previousWeek.TotalSpending) / previousWeek.TotalSpending) * 100;
 
+            List<SpendingRecord> recordList = SpendingContext.GetAllSpendingRecord(userid);
+
+
+
             SpendingViewModel sv = new SpendingViewModel();
             sv.current = currentWeek;
             sv.past = spendingList;
             sv.weekdiff = wsd;
+            sv.spendrecord = recordList;
 
             return View(sv);
         }
 
+        // GET: SpendingController/Create
+        public ActionResult Create()
+        {
+            return View();
+        }
 
+        // POST: SpendingController/Create
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Create(SpendingRecord record)
+        {
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    int userid = HttpContext.Session.GetInt32("UserID").Value;
+                    //Add spending record to database
+                    SpendingContext.AddSpending(record, userid);
+                    SpendingContext.UpdateWeeklySpending(userid, record);
 
+                    return RedirectToAction("Index", "Spending");
+                }
+                else
+                {
+                    //Input validation fails, return to the Create view to display error message
+                    return RedirectToAction("Create", "Spending");
+                }
+            }
+            catch
+            {
+                return View();
+            }
+        }
     }
 }

@@ -72,6 +72,47 @@ namespace SDD_P02_Group1.DAL
             return liability.LiabilityID;
         }
 
+        public int EditLiability(Liability liability, int id)
+        {
+            //Create a SqlCommand object from connection object
+            SqlCommand cmd = conn.CreateCommand();
+            //Specify an UPDATE SQL statement
+            cmd.CommandText = @"UPDATE UserLiability SET LiabilityName=@name,  LiabilityType=@type, LiabilityDesc=@desc, Cost=@cost, DueDate=@date, RecurringType=@recurType, RecurringDuration=@duration WHERE LiabilityID = @id";
+            //Define the parameters used in SQL statement, value for each parameter
+            //is retrieved from respective class's property.
+            cmd.Parameters.AddWithValue("@name", liability.LiabilityName);
+            cmd.Parameters.AddWithValue("@type", liability.LiabilityType);
+            cmd.Parameters.AddWithValue("@cost", liability.Cost);
+            cmd.Parameters.AddWithValue("@recurType", liability.RecurringType);
+            cmd.Parameters.AddWithValue("@id", id);
+
+            if (liability.DueDate != null)
+                // A branch is assigned
+                cmd.Parameters.AddWithValue("@date", liability.DueDate);
+            else // No branch is assigned
+                cmd.Parameters.AddWithValue("@date", DBNull.Value);
+
+            if (liability.RecurringDuration != null)
+                // A branch is assigned
+                cmd.Parameters.AddWithValue("@duration", liability.RecurringDuration);
+            else // No branch is assigned
+                cmd.Parameters.AddWithValue("@duration", DBNull.Value);
+
+            if (liability.LiabilityDesc != null)
+                // A branch is assigned
+                cmd.Parameters.AddWithValue("@desc", liability.LiabilityDesc);
+            else // No branch is assigned
+                cmd.Parameters.AddWithValue("@desc", DBNull.Value);
+
+            //Open a database connection
+            conn.Open();
+            //ExecuteNonQuery is used for UPDATE and DELETE
+            int count = cmd.ExecuteNonQuery();
+            //Close the database connection
+            conn.Close();
+            return count;
+        }
+
         public Liability GetLiabilityDetails(int liabilityId)
         {
             Liability liability = new Liability();
@@ -99,7 +140,7 @@ namespace SDD_P02_Group1.DAL
                     liability.DueDate = !reader.IsDBNull(5) ? reader.GetDateTime(5) : (DateTime?)null;
                     liability.RecurringType = reader.GetString(6);
                     liability.RecurringDuration = !reader.IsDBNull(7) ? reader.GetInt32(7) : (int?)null;
-                    liability.UserID = reader.GetInt32(6);
+                    liability.UserID = reader.GetInt32(8);
                 }
             }
             //Close data reader
@@ -148,6 +189,24 @@ namespace SDD_P02_Group1.DAL
             //Close database connection
             conn.Close();
             return liabilityList;
+        }
+
+        public int DeleteLiability(int liabilityID)
+        {
+            //Create a SqlCommand object from connection object
+            SqlCommand cmd = conn.CreateCommand();
+            //Specify an UPDATE SQL statement
+            cmd.CommandText = @"DELETE FROM UserLiability WHERE LiabilityID = @id";
+            //Define the parameters used in SQL statement, value for each parameter
+            //is retrieved from respective class's property.
+            cmd.Parameters.AddWithValue("@id", liabilityID);
+            //Open a database connection
+            conn.Open();
+            //ExecuteNonQuery is used for UPDATE and DELETE
+            int rowAffected = cmd.ExecuteNonQuery();
+            //Close the database connection
+            conn.Close();
+            return rowAffected;
         }
     }
 }

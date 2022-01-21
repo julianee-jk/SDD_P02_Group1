@@ -1,0 +1,38 @@
+﻿@model SDD_P02_Group1.Models.SpendingRecord
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h4>Spending</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="DateOfTransaction" class="control-label"></label>
+                <input asp-for="DateOfTransaction" class="form-control" />
+                <span asp-validation-for="DateOfTransaction" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="CategoryOfSpending" class="control-label"></label>
+                <input asp-for="CategoryOfSpending" class="form-control" />
+                <span asp-validation-for="CategoryOfSpending" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="AmountSpent" class="control-label"></label>
+                <input asp-for="AmountSpent" class="form-control" />
+                <span asp-validation-for="AmountSpent" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Add" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back</a>
+</div>
+

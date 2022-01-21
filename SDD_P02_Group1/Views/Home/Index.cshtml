@@ -1,4 +1,4 @@
-﻿@model IEnumerable<SDD_P02_Group1.Models.Liability>
+﻿@model SDD_P02_Group1.ViewModels.OverviewViewModel
 
 @{
     ViewData["Title"] = "Home";
@@ -18,8 +18,27 @@
             userRole = Context.Session.GetString("Role");
             <p style="color: #0E152D;">You are logged in as a <span style="color: #a629c2 ">@userRole</span></p>
 
+            <hr />
+            <h3 style="margin-top: 2em; margin-bottom:5px">Current Week Spendings</h3>
             <div class="text-center">
-                <partial name="~/Views/Home/_ViewLiabilities.cshtml" model="@Model" />
+                <partial name="~/Views/Home/_ViewSpendings.cshtml" model="@Model.sp" />
+            </div>
+
+            //<p class="text-center" style="margin: 1rem ">Export spendings <a href="#" data-toggle="modal" data-target="#export">here</a><br></p>
+            <div class="row" style="float: right">
+                <form method="post" action="~/Home/CreateExcel">
+                    <input type="submit" value="Export" class="btn btn-danger m-1" />
+                </form>
+                <form method="post" action="~/Home/ImportExcel" enctype="multipart/form-data">
+                    <div style="display: flex; justify-content: center; flex-direction: column">
+                        <input type="submit" value="Import" class="btn btn-danger m-1" style="width: 13em" />
+                        <input type="file" name="file" accept=".xlsx" style="margin-left: 4px;" />
+                    </div>
+                </form>
+            </div>
+            <h3 style="margin-top: 4em; margin-bottom: 5px">Upcoming Liabilities</h3>
+            <div class="text-center">
+                <partial name="~/Views/Home/_ViewLiabilities.cshtml" model="@Model.lb" />
             </div>
         }
 
@@ -29,3 +48,31 @@
         }
     }
 </div>
+
+@*<div class="modal fade" id="export" tabindex="-1" role="dialog" aria-labelledby="exportconfirmation" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">Export Spendings</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                Please enter the name of the Excel file
+                <br><br>
+                <form method="post" action="~/Home/CreateExcel">
+                    <input type="text" class="form-control" name="filepath">
+                    <br>
+                    <div class="float-right">
+                        <br>                        
+                        <input type="submit" value="Export" class="btn btn-danger" />
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    </div>
+                </form>
+                <div class="modal-footer">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>*@

@@ -1,0 +1,49 @@
+﻿@model SDD_P02_Group1.ViewModels.UserCardSpendingViewModel
+
+@{
+    ViewData["Title"] = "Card Details";
+}
+
+<h4 class="font-weight-bold" style="margin: 1em 0 1em 0">@Html.Display("CardName")</h4>
+
+<div>
+    <fieldset class="FormContent">
+        <div class="form-group row">
+            <label asp-for="userCard.CardID" class="col-sm-3 col-form-label font-weight-bold"></label>
+            <div class="col-sm-9 form-control-plaintext">
+                @Html.Display("userCard.CardID")
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label asp-for="userCard.CardName" class="col-sm-3 col-form-label font-weight-bold"></label>
+            <div class="col-sm-9 form-control-plaintext">
+                @Html.Display("userCard.CardName")
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label asp-for="userCard.CardDesc" class="col-sm-3 col-form-label font-weight-bold"></label>
+            @if (Model.userCard.CardDesc == null)
+            {
+                <div class="col-sm-9 form-control-plaintext">No Description</div>
+            }
+
+            else
+            {
+                <div class="col-sm-9 form-control-plaintext">@Html.Display("userCard.CardDesc")</div>
+            }
+        </div>
+
+        <div class="form-group row">
+            <label asp-for="userCardSpending.TotalCardAmountSpent" class="col-sm-3 col-form-label font-weight-bold"></label>
+            <div class="col-sm-9 form-control-plaintext">
+                @Html.Display("userCardSpending.TotalCardAmountSpent")
+            </div>
+        </div>
+    </fieldset>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>

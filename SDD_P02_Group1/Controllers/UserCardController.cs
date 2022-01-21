@@ -7,26 +7,40 @@ using System.Threading.Tasks;
 using SDD_P02_Group1.DAL;
 using SDD_P02_Group1.Models;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using SDD_P02_Group1.ViewModels;
 
 namespace SDD_P02_Group1.Controllers
 {
     public class UserCardController : Controller
     {
         private UserCardDAL UserCardContext = new UserCardDAL();
-        private UserDAL userContext = new UserDAL();
+        private UserCardDAL userCardContext = new UserCardDAL();
 
         // GET: LiabilityController
         public ActionResult Index()
         {
+            if ((HttpContext.Session.GetString("Role") == null) || (HttpContext.Session.GetString("Role") != "User"))
+            {
+                return RedirectToAction("Index", "Home");
+            }
             int userid = HttpContext.Session.GetInt32("UserID").Value;
             List<UserCard> userCardList = UserCardContext.GetAllUserCard(userid);
             return View(userCardList);
         }
 
-        // GET: LiabilityController/Details/5
-        public ActionResult Details(int id)
+        //GET: LiabilityController/Details/5
+        public ActionResult Details(int? cardid, int? userid)
         {
-            return View();
+
+            UserCard usercard = userCardContext.GetUserCardDetails(userid.Value, cardid.Value);
+            UserCardSpending userCardSpending = userCardContext.GetUserCardSpendingsDetails(userid.Value, cardid.Value);
+
+            UserCardSpendingViewModel userCardSpendingVM = new UserCardSpendingViewModel();
+
+            userCardSpendingVM.userCard = usercard;
+            userCardSpendingVM.userCardSpending = userCardSpending;
+
+            return View(userCardSpendingVM);
         }
 
         // GET: LiabilityController/Create
@@ -87,25 +101,33 @@ namespace SDD_P02_Group1.Controllers
         }
 
         // GET: LiabilityController/Delete/5
-        public ActionResult Delete(int id)
+        public ActionResult Delete(int userid, int cardid)
         {
-            return View();
+            // Stop accessing the action if not logged in
+            // or account not in the "Judge" role
+            if ((HttpContext.Session.GetString("Role") == null) ||
+            (HttpContext.Session.GetString("Role") != "User"))
+            {
+                return RedirectToAction("Index", "Home");
+            }
+            UserCard userCard = userCardContext.GetUserCardDetails(userid, cardid);
+            if (userCard == null)
+            {
+                //Return to listing page, not allowed to edit
+                return RedirectToAction("Index");
+            }
+            return View(userCard);
         }
 
         // POST: LiabilityController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        public ActionResult Delete(UserCard userCard)
         {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
+            userCardContext.Delete(userCard.UserID, userCard.CardID);
+            return RedirectToAction("Index");
         }
+
 
         // Get all card types list
         private List<SelectListItem> GetCardTypes()

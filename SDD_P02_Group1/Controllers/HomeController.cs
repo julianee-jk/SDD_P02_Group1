@@ -8,7 +8,11 @@ using System.Net.Mail;
 using System.Threading.Tasks;
 using SDD_P02_Group1.DAL;
 using SDD_P02_Group1.Models;
+using SDD_P02_Group1.ViewModels;
 using Microsoft.AspNetCore.Http;
+using OfficeOpenXml;
+using System.IO;
+using OfficeOpenXml.DataValidation;
 
 namespace SDD_P02_Group1.Controllers
 {
@@ -17,6 +21,7 @@ namespace SDD_P02_Group1.Controllers
         private readonly ILogger<HomeController> _logger;
         private UserDAL UserContext = new UserDAL();
         private LiabilityDAL LiabilityContext = new LiabilityDAL();
+        private SpendingDAL SpendingContext = new SpendingDAL();
 
         public HomeController(ILogger<HomeController> logger)
         {
@@ -41,7 +46,7 @@ namespace SDD_P02_Group1.Controllers
                     {
                         message = message + l.LiabilityName + " (Due Soon)\n";
                     }
-                    else if (l.DueDate != null && ((Convert.ToDateTime(l.DueDate) - today).TotalDays< 0))
+                    else if (l.DueDate != null && ((Convert.ToDateTime(l.DueDate) - today).TotalDays < 0))
                     {
                         message = message + l.LiabilityName + " (Overdue)\n";
                     }
@@ -54,8 +59,26 @@ namespace SDD_P02_Group1.Controllers
                     HttpContext.Session.SetString("LiabilityEmail", "Sent");
                 }
 
-                return View(liabilityList);
-            }
+                DateTime currentMonday = DateTime.Today;
+                while (currentMonday.DayOfWeek.ToString() != "Monday")
+                {
+                    currentMonday = currentMonday.AddDays(-1);
+                    Console.WriteLine(currentMonday);
+                }
+
+                if (!SpendingContext.IsSpendingExist(userid, currentMonday))
+                {
+                    SpendingContext.AddDefaultSpending(userid, currentMonday);
+                }
+
+                Spending currentWeek = SpendingContext.GetSpendingByDate(userid, currentMonday);
+
+                OverviewViewModel sv = new OverviewViewModel();
+                sv.lb = liabilityList;
+                sv.sp = currentWeek;
+                
+                return View(sv);
+            }      
             return View();
         }
 
@@ -155,6 +178,94 @@ namespace SDD_P02_Group1.Controllers
             }
         }
 
+        public ActionResult CreateExcel(string uid, IFormCollection formData)
+        {
+            int userid = HttpContext.Session.GetInt32("UserID").Value;
+            string filepath = "Weekly Spendings - " + userid.ToString() + ".xlsx";
+            ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+            using (ExcelPackage excel = new ExcelPackage())
+            {
+                //Add Worksheets in Excel file
+                excel.Workbook.Worksheets.Add("Weekly Spendings");
+               
+
+                //Create Excel file in Uploads folder of your project
+                FileInfo excelFile = new FileInfo(filepath);
+
+                //Add header row columns name in string list array
+                var headerRow = new List<string[]>()
+                  {
+                    new string[] { "First Date Of Week", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday", "Total Spending", "User ID" }
+                  };
+
+               
+                // Get the header range
+                string Range = "A1:" + Char.ConvertFromUtf32(headerRow[0].Length + 64) + "1";
+
+                // get the workSheet in which you want to create header
+                var worksheet = excel.Workbook.Worksheets["Weekly Spendings"];
+
+                // Populate & style header row data
+                worksheet.Cells[Range].Style.Font.Bold = true;
+                worksheet.Cells[Range].LoadFromArrays(headerRow);
+
+                //set validation for input boxes
+                var decimalValidation = worksheet.DataValidations.AddDecimalValidation("B2:I2");
+                decimalValidation.ShowErrorMessage = true;
+                decimalValidation.ErrorStyle = ExcelDataValidationWarningStyle.stop;
+                decimalValidation.ErrorTitle = "The value you entered is not valid";
+                decimalValidation.Error = "This cell must be a valid positive number.";
+                decimalValidation.Operator = ExcelDataValidationOperator.greaterThanOrEqual;
+                decimalValidation.Formula.Value = 0D;
+
+                //lock all cells exept inputs
+                worksheet.Protection.IsProtected = true;
+                worksheet.Cells["B2:H2"].Style.Locked = false;
+
+                //add formula to total spent column
+                worksheet.Cells["I2"].Formula = "=SUM(B2:H2)";
+
+                //auto size all columns
+                worksheet.Cells["A1:K20"].AutoFitColumns();
+
+                //Add data into list
+                DateTime currentMonday = DateTime.Today;
+                while (currentMonday.DayOfWeek.ToString() != "Monday")
+                {
+                    currentMonday = currentMonday.AddDays(-1);
+                }
+                Spending currweek = SpendingContext.GetSpendingByDate(userid, currentMonday);
+
+                //2 is rowNumber 1 is column number
+                worksheet.Cells[2, 1].Value = currweek.FirstDateOfWeek.ToString();
+                worksheet.Cells[2, 2].Value = ConvertDecimal(currweek.MonSpending.ToString());
+                worksheet.Cells[2, 3].Value = ConvertDecimal(currweek.TueSpending.ToString());
+                worksheet.Cells[2, 4].Value = ConvertDecimal(currweek.WedSpending.ToString());
+                worksheet.Cells[2, 5].Value = ConvertDecimal(currweek.ThuSpending.ToString());
+                worksheet.Cells[2, 6].Value = ConvertDecimal(currweek.FriSpending.ToString());
+                worksheet.Cells[2, 7].Value = ConvertDecimal(currweek.SatSpending.ToString());
+                worksheet.Cells[2, 8].Value = ConvertDecimal(currweek.SunSpending.ToString());
+                worksheet.Cells[2, 10].Value = userid;
+
+                //Save Excel file
+                excel.SaveAs(excelFile);
+            }
+            byte[] fileBytes = System.IO.File.ReadAllBytes(filepath);
+            string fileName = "Weekly Spendings - " + userid.ToString() + ".xlsx";
+
+            //return RedirectToAction("Index");
+            return File(fileBytes, System.Net.Mime.MediaTypeNames.Application.Octet, fileName);
+        }
+
+        public decimal ConvertDecimal(string value)
+        {
+            if(value == null || value == "")
+            {
+                return 0;
+            }
+            else { return Convert.ToDecimal(value); }
+        }
+
         public ActionResult AccountLogin(IFormCollection formData)
         {
             // Read inputs from textboxes
@@ -208,6 +319,46 @@ namespace SDD_P02_Group1.Controllers
 
             // Call the Index action of Home controller
             return RedirectToAction("Index");
+        }
+
+        public async Task<ActionResult> ImportExcel(IFormFile file)
+        {
+            try
+            {
+                var weeklySpendingList = new List<WeeklySpending>();
+                using (var stream = new MemoryStream())
+                {
+                    await file.CopyToAsync(stream);
+                    using (var package = new ExcelPackage(stream))
+                    {
+                        ExcelWorksheet worksheet = package.Workbook.Worksheets[0];
+                        var rowcount = worksheet.Dimension.Rows;
+                        for (int row = 2; row <= rowcount; row++)
+                        {
+                            weeklySpendingList.Add(new WeeklySpending
+                            {
+                                UserID = Convert.ToInt32(worksheet.Cells[2, 10].Value.ToString().Trim()),
+                                FirstDateOfWeek = Convert.ToDateTime(worksheet.Cells[row, 1].Value.ToString().Trim()),
+                                MonSpending = Convert.ToDecimal(worksheet.Cells[row, 2].Value.ToString().Trim()),
+                                TueSpending = Convert.ToDecimal(worksheet.Cells[row, 3].Value.ToString().Trim()),
+                                WedSpending = Convert.ToDecimal(worksheet.Cells[row, 4].Value.ToString().Trim()),
+                                ThuSpending = Convert.ToDecimal(worksheet.Cells[row, 5].Value.ToString().Trim()),
+                                FriSpending = Convert.ToDecimal(worksheet.Cells[row, 6].Value.ToString().Trim()),
+                                SatSpending = Convert.ToDecimal(worksheet.Cells[row, 7].Value.ToString().Trim()),
+                                SunSpending = Convert.ToDecimal(worksheet.Cells[row, 8].Value.ToString().Trim()),
+                                TotalSpending = Convert.ToDecimal(worksheet.Cells[row, 9].Value.ToString().Trim()),
+                            });
+                        }
+                    }
+                }
+                SpendingContext.EditSpending(weeklySpendingList.First());
+            }
+            catch (Exception e)
+            {
+                //ViewData["UploadMessage"] = "File upload fail";
+                return RedirectToAction("Index", "Home");
+            }
+            return RedirectToAction("Index", "Home");
         }
     }
 }
