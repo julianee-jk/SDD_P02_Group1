@@ -1,7 +1,9 @@
-﻿<nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-lg-3">
+﻿@*@model IEnumerable<SDD_P02_Group1.Models.AssetHistory>*@
+
+<nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-lg-3">
     <div class="container">
         <a class="navbar-brand" href="~/Home/Index"
-            style="color: #7f218a; font-weight: bold; font-size: 24px; word-break: break-word;">
+           style="color: #7f218a; font-weight: bold; font-size: 24px; word-break: break-word;">
             Moo<span style="color: #0E152D">lah</span>
         </a>
 
@@ -28,7 +30,8 @@
                     <a class="nav-link text-dark" href="#">Predict</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link text-dark" href="#">View Assets History</a>
+                    @*!!!*@
+                    <a class="nav-link text-dark" asp-controller="Asset" asp-action="History"> Asset History</a>
                 </li>
             </ul>
 

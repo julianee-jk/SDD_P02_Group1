@@ -6,7 +6,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using SDD_P02_Group1.DAL;
 using SDD_P02_Group1.Models;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using SDD_P02_Group1.ViewModels;
 
