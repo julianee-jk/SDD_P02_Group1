@@ -62,8 +62,6 @@ namespace SDD_P02_Group1.DAL
             return asset.AssetID;
         }
 
-
-
         public Asset GetAssetDetails(int assetID)
         {
             Asset asset = new Asset();
@@ -219,6 +217,13 @@ namespace SDD_P02_Group1.DAL
 
             if (a1.CurrentValue != a2.CurrentValue || a1.AssetDesc != a2.AssetDesc || a1.AssetType != a2.AssetType)
             {
+                Console.WriteLine("ERROR: " + a1.AssetType.GetType());
+                Console.WriteLine("ERROR: " + a1.AssetDesc.GetType());
+                Console.WriteLine("ERROR: " + a1.CurrentValue.GetType());
+                Console.WriteLine("ERROR: " + a2.AssetType.GetType());
+                Console.WriteLine("ERROR: " + a2.AssetDesc.GetType());
+                Console.WriteLine("ERROR: " + a2.CurrentValue.GetType());
+
                 cmd.CommandText = @"DECLARE @Time AS DATETIME = GETDATE();  
                 INSERT INTO 
                     AssetChanges 
@@ -261,8 +266,8 @@ namespace SDD_P02_Group1.DAL
                 AHL.Add(
                 new AssetHistory
                 {
-                    UserID = reader.GetInt32(0),
-                    AssetID = reader.GetInt32(1),
+                    UserID = Convert.ToInt32(reader.GetString(0)),
+                    AssetID = Convert.ToInt32(reader.GetString(1)),
                     Timestamp = Convert.ToDateTime(reader.GetString(2)),
                     AssetType = reader.GetString(3),
                     AssetTypeNew = !reader.IsDBNull(4) ? reader.GetString(4) : (string?)null,

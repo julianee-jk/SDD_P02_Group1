@@ -139,10 +139,10 @@ namespace SDD_P02_Group1.Controllers
             //005
             //List<AssetHistory> staffList = assetContext.GetChanges(userid);
 
-            List<AssetHistory> staffList = assetContext.GetChanges(userid);
+            List<AssetHistory> AHL = assetContext.GetChanges(userid);
             //002
             //return null;
-            return View(staffList);
+            return View(AHL);
         }
 
         // GET: AssetController/Delete/5
