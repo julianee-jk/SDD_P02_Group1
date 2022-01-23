@@ -147,6 +147,25 @@ CREATE TABLE dbo.UserSpendingRecord
 )
 GO
 
+CREATE TABLE dbo.AssetChanges
+(
+	--AssetChangeID		VARCHAR(50) 	NOT NULL		IDENTITY(1,1),
+	AssetChangeID		INT				NOT NULL		IDENTITY(1,1),
+	--UserID				VARCHAR(50)		NOT NULL,
+	UserID				INT				NOT NULL,
+	AssetID				INT				NOT NULL,
+	Timestamp			VARCHAR(100)	NOT NULL,
+	AssetType			VARCHAR(50)		NOT NULL,
+	AssetTypeNew		VARCHAR(50)		NULL,
+	AssetDesc			VARCHAR(200)	NOT NULL,
+	AssetDescNew		VARCHAR(200)	NULL,
+	CurrentValue		MONEY			NOT NULL,
+	CurrentValueNew		MONEY			NULL,
+
+	CONSTRAINT PK_AssetChanges PRIMARY KEY NONCLUSTERED (AssetChangeID, Timestamp),
+)
+GO
+
 /*** Dummy Values ***/
 
 
@@ -177,6 +196,11 @@ INSERT INTO UserCardSpending VALUES ('2022-01-01',888,2)
 INSERT INTO UserSpendingRecord VALUES ('2021-10-10','Food',72,1)
 INSERT INTO UserSpendingRecord VALUES ('2021-11-11','Clothes',184,1)
 INSERT INTO UserSpendingRecord VALUES ('2022-01-04','Clothes',145,2)
+
+DECLARE @Time AS DATETIME = GETDATE()
+INSERT INTO AssetChanges VALUES (1, 1, @Time, 'T1', 'T2', 'D1', 'D2', 1, 2)
+INSERT INTO AssetChanges VALUES (1, 1, @Time, 'T1', 'TX', 'D1', 'D2', 1, 2)
+
 
 /*
 SELECT * FROM UserCard
