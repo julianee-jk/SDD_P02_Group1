@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
+using System.Web;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -31,6 +32,8 @@ namespace SDD_P02_Group1.Controllers
 
         public IActionResult Index()
         {
+            Console.WriteLine("Email: " + Request.Cookies["Email"] + " Password: " + Request.Cookies["Password"]);
+
             if (HttpContext.Session.GetString("Role") == "User")
             {
                 int userid = HttpContext.Session.GetInt32("UserID").Value;
@@ -269,13 +272,14 @@ namespace SDD_P02_Group1.Controllers
             else { return Convert.ToDecimal(value); }
         }
 
-        public ActionResult AccountLogin(IFormCollection formData)
+        public ActionResult AccountLogin(IFormCollection formData, Checkbox check)
         {
             // Read inputs from textboxes
             // Email address converted to lowercase
             string emailAddress = formData["txtEmail"].ToString().ToLower();
             string password = formData["txtPassword"].ToString();
-                         
+            bool remember = check.remember;
+
             List<User> userList = UserContext.GetAllUsers(); // Check judge list
 
             foreach (User user in userList)
@@ -284,12 +288,23 @@ namespace SDD_P02_Group1.Controllers
                 {
                     // Store Email Address in session with the key “LoginID”
                     HttpContext.Session.SetString("LoginID", emailAddress);
-
                     // Store user role “User” as a string in session with the key “Role”
                     HttpContext.Session.SetString("Role", "User");
-
                     // Store UserId as a int in session with the key “UserID”
                     HttpContext.Session.SetInt32("UserID", user.UserId);
+
+                    // Store login info to cookie if remember me is checked
+                    if (remember)
+                    {
+                      
+                        Response.Cookies.Append("Email", emailAddress);
+                        Response.Cookies.Append("Password", password);
+                    }
+                    else
+                    {
+                        Response.Cookies.Delete("Email");
+                        Response.Cookies.Delete("Password");
+                    }
 
                     // Redirect user to the "Index" view through an action
                     return RedirectToAction("Index");
@@ -307,6 +322,8 @@ namespace SDD_P02_Group1.Controllers
         {
             // Clear all key-values pairs stored in session state
             HttpContext.Session.Clear();
+            Response.Cookies.Delete("Email");
+            Response.Cookies.Delete("Password");
 
             // Call the Index action of Home controller
             return RedirectToAction("Index");
