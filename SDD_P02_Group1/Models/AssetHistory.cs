@@ -11,7 +11,7 @@ namespace SDD_P02_Group1.Models
     public class AssetHistory
     {
         //[ForeignKey("UserID")]
-        public virtual int UserID { get; set; }
+        public int UserID { get; set; }
         //public virtual User User { get; set; }
 
         //[Required]

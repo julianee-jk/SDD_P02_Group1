@@ -279,6 +279,8 @@ namespace SDD_P02_Group1.DAL
                 );
             }
 
+            Console.WriteLine("AHL.Count: " + AHL.Count);
+
             reader.Close();
 
             conn.Close();
