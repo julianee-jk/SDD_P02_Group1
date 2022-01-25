@@ -32,10 +32,10 @@ namespace SDD_P02_Group1.Controllers
 
         public IActionResult Index()
         {
-            Console.WriteLine("Email: " + Request.Cookies["Email"] + " Password: " + Request.Cookies["Password"]);
-            List<User> userList = UserContext.GetAllUsers(); // Check judge list
+            Console.WriteLine("Email: " + Request.Cookies["Email"] + " Password: " + Request.Cookies["Password"]);          
             if ((Request.Cookies["Email"] != "" && Request.Cookies["Email"] != null) && HttpContext.Session.GetString("Role") == null)
             {
+                List<User> userList = UserContext.GetAllUsers(); // Check judge list
                 foreach (User user in userList)
                 {
                     if (Request.Cookies["Email"] == user.EmailAddr.ToLower() && Request.Cookies["Password"] == user.Password)
